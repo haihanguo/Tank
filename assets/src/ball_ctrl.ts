@@ -15,9 +15,13 @@ export default class ball_ctrl extends cc.Component {
     @property
     speed: number = 0;
 
+    @property(cc.Node)
+    camera: cc.Node = null;
+
     @property(joystick)
     stick: joystick = null;
 
+    private offset: cc.Vec2 = cc.v2(0,0);
     private body: cc.RigidBody = null;
     // LIFE-CYCLE CALLBACKS:
 
@@ -26,10 +30,18 @@ export default class ball_ctrl extends cc.Component {
     }
 
     start () {
-
+        if(this.camera != null){
+            this.offset = this.camera.getPosition().subtract(this.node.getPosition());
+        }
+        
     }
     
     update (dt) {
+
+        if(this.camera != null){
+            this.camera.setPosition(this.node.x + this.offset.x, this.node.y + this.offset.y);
+        }
+
         if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
             this.body.linearVelocity = cc.v2(0,0);
             return;
