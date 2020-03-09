@@ -80,48 +80,65 @@ export default class player extends cc.Component {
         //flip player image if angle > 180
         var r: number = Math.atan2(this.stick.dir.y, this.stick.dir.x);
         this.degree = r * 180 / Math.PI;
-
-        if(this.getPlayerFaceDirection() === 'right'){
-            if(this.node.scaleX > 0){
-                this.node.scaleX *= -1.0;
-            }
+        //console.log(this.node.getChildByName('handgun').angle);
+        this.flipPlayer();
+        if(this.getPlayerFaceDirection() === 'left'){
             this.node.getChildByName('handgun').angle = 180 - this.degree; 
         }else{
-            if(this.node.scaleX < 0){
-                this.node.scaleX *= -1.0;
-            }
             this.node.getChildByName('handgun').angle = this.degree; 
         }
-
-
     }
-    getPlayerFaceDirection(){
-        var player_angle_to_canvas : number = this.body.linearVelocity.signAngle(cc.v2(1,0));
-        if(player_angle_to_canvas <= -1.5 || player_angle_to_canvas >= 1.5){
+    getPlayerFaceDirection(){        
+        if(this.node.scaleX > 0){
             return 'right';                         
         }else{
             return 'left';            
         }
     }
-    creatBullet() {
-        var player_wepeon : cc.Node = this.node.getChildByName('handgun');
-        var gun_point_position : cc.Vec2 = player_wepeon.getPosition();
-        var angle :number = player_wepeon.angle + 90;
-        var wepeon_height :number = player_wepeon.getContentSize().height;
-        var wepeon_width :number = player_wepeon.getContentSize().width+5;
 
-        var bullet_x = gun_point_position.x + wepeon_width * MathUtilities.sind(angle);
-        var bullet_y = gun_point_position.y +  wepeon_height * MathUtilities.cosd(angle);
-        console.log(gun_point_position.x, gun_point_position.y, angle);
-        console.log(bullet_x, bullet_y);
+    flipPlayer(){
+        var player_weapon :cc.Node = this.node.getChildByName('handgun');
+        var player_wepeon_firepoint : cc.Node = player_weapon.getChildByName('firepoint');
+        //check if gun point position x larger than gun position x
+        //console.log(player_weapon.angle);
+        if(player_weapon.convertToWorldSpaceAR(player_wepeon_firepoint.getPosition()).x - player_weapon.convertToWorldSpaceAR(player_weapon.getPosition()).x > 0){
+            if(!(player_weapon.angle > 80 && player_weapon.angle < 100)){
+                if(this.node.scaleX < 0){
+                    this.node.scaleX *= -1.0;
+                }
+            }            
+        }else{
+            if(!(player_weapon.angle > 80 && player_weapon.angle < 100)){
+                if(this.node.scaleX > 0){
+                    this.node.scaleX *= -1.0;
+                }
+            }
+        }
+    }
+    creatBullet() {
+        var player_weapon :cc.Node = this.node.getChildByName('handgun');
+        var player_wepeon_firepoint : cc.Node = player_weapon.getChildByName('firepoint');
+        var firepoint_world_position :cc.Vec2 = player_wepeon_firepoint.convertToWorldSpaceAR(player_wepeon_firepoint.getPosition());
+        var firepoint_player_position : cc.Vec2 = this.node.convertToNodeSpaceAR(firepoint_world_position);
 
         
-        //var bulletPosition : cc.Vec2 = cc.v2(bullet_x, bullet_y).add(cc.v2(wepeon_width * MathUtilities.sind(15), wepeon_height * MathUtilities.cosd(15)));
-        //const newBullet : cc.Node = cc.instantiate(this.normal_bullet);
-        //newBullet.setPosition(bulletPosition);
-        //const body = newBullet.getComponent(cc.RigidBody);
-        //body.linearVelocity = cc.v2(MathUtilities.sind(-newBullet.angle) * newBullet.getComponent('normal_bullet').bullet_speed, MathUtilities.cosd(newBullet.angle) * newBullet.getComponent('normal_bullet').bullet_speed);	
-        //this.node.addChild(newBullet);
+        var angle :number = player_weapon.angle;
+        var offset : number = 50;
+        firepoint_player_position.x += offset * MathUtilities.sind(-angle+90)
+        firepoint_player_position.y += offset * MathUtilities.cosd(angle+90)
+
+        var bullet_position : cc.Vec2 = firepoint_player_position;
+        const new_bullet : cc.Node = cc.instantiate(this.normal_bullet);
+        console.log(player_weapon.angle, firepoint_player_position.x, firepoint_player_position.y, bullet_position.x, bullet_position.y);
+        new_bullet.setPosition(bullet_position);
+        //new_bullet.setScale(0.33);
+        new_bullet.angle = angle;
+        const bullet_body : cc.RigidBody = new_bullet.getComponent(cc.RigidBody);
+        //bullet_body.linearVelocity = cc.v2(MathUtilities.sind(-new_bullet.angle) * new_bullet.getComponent('normal_bullet').bullet_speed, MathUtilities.cosd(new_bullet.angle) * new_bullet.getComponent('normal_bullet').bullet_speed);	
+        if(this.getPlayerFaceDirection() === "left"){
+            new_bullet.scaleX *= -1.0;
+        }
+        this.node.addChild(new_bullet);
 
         //var playerPosition : cc.Vec2 = this.node.getPosition();
         //var angle :number = this.node.angle-90;

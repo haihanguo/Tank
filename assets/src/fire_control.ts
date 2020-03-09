@@ -71,14 +71,13 @@ export default class fire_control extends cc.Component {
 
             var r: number = Math.atan2(this.dir.y, this.dir.x);
             var player_degree: number = r * 180 / Math.PI;
-            
-            //rotation clockwise
-            //degree = 360 - degree;
-            //degree = degree + 90;
-            //this.node.rotation = degree;
-            //angle counterclockwise 
-            //console.log(player_degree);
-            this.player.angle = player_degree - 90 + 90;     
+
+            this.player.getComponent('player').flipPlayer();
+            if(this.player.getComponent('player').getPlayerFaceDirection() === 'left'){
+                this.player.getChildByName('handgun').angle = 180 - player_degree; 
+            }else{
+                this.player.getChildByName('handgun').angle = player_degree; 
+            }  
         }
 
     }
