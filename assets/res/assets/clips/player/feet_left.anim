@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "feet_left",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.06666666666666667,
+  "sample": 60,
+  "speed": 0.1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "2e5ff8f6-f94a-45eb-9ff6-7a96250ec663"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "10388091-80fd-4e09-b943-3edc86fea1ab"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "8b9f6e6d-ed40-4820-a12d-5e9c1a20ae9d"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "b26f0654-2805-4604-8564-8fab9765c90b"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

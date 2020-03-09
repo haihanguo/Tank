@@ -23,7 +23,12 @@ export default class NewClass extends cc.Component {
     @property
     bullet_speed : number = 0;
     // onLoad () {}
+    @property
+    bullet_fire_speed : number = 0;
 
+    @property
+    bullet_count : number = 0;
+    
     start () {
 
     }

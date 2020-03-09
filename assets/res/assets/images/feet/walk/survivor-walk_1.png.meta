@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "06eec473-b7fc-46d4-9c7c-3590f755c28c",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 26,
+  "height": 19,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-walk_1": {
+      "ver": "1.0.4",
+      "uuid": "a28f3a2b-d20a-4243-b93f-0a9d5031dd17",
+      "rawTextureUuid": "06eec473-b7fc-46d4-9c7c-3590f755c28c",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -0.5,
+      "offsetY": 0,
+      "trimX": 5,
+      "trimY": 1,
+      "width": 15,
+      "height": 17,
+      "rawWidth": 26,
+      "rawHeight": 19,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

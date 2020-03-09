@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "1399ba35-3d89-4ebb-b93a-cf6c9c9ecd67",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 38,
+  "height": 32,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-idle_handgun_16": {
+      "ver": "1.0.4",
+      "uuid": "9cc01b4d-f2fe-4c07-b636-68878d0eeb68",
+      "rawTextureUuid": "1399ba35-3d89-4ebb-b93a-cf6c9c9ecd67",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 1.5,
+      "offsetY": -1,
+      "trimX": 4,
+      "trimY": 5,
+      "width": 33,
+      "height": 24,
+      "rawWidth": 38,
+      "rawHeight": 32,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

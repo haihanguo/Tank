@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "15bbf3c4-2065-4ac3-8c26-8204e6cda3cc",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 23,
+  "height": 26,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-strafe_right_1": {
+      "ver": "1.0.4",
+      "uuid": "5fda5632-479b-449c-9f99-15d3d4ed0c3f",
+      "rawTextureUuid": "15bbf3c4-2065-4ac3-8c26-8204e6cda3cc",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 1,
+      "trimY": 4,
+      "width": 21,
+      "height": 18,
+      "rawWidth": 23,
+      "rawHeight": 26,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

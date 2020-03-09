@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "dd4d782c-07e0-44dc-84c2-ac53382022e1",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 258,
+  "height": 220,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-move_handgun_12": {
+      "ver": "1.0.4",
+      "uuid": "47658f88-e35e-4b58-b533-12c659bba85e",
+      "rawTextureUuid": "dd4d782c-07e0-44dc-84c2-ac53382022e1",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 12,
+      "offsetY": -10,
+      "trimX": 35,
+      "trimY": 42,
+      "width": 212,
+      "height": 156,
+      "rawWidth": 258,
+      "rawHeight": 220,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "80ce6bcd-8597-4065-be7d-3c5791e1f793",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 291,
+  "height": 256,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-meleeattack_handgun_11": {
+      "ver": "1.0.4",
+      "uuid": "f8b1e72f-9786-42da-b63c-91fcaaf98b86",
+      "rawTextureUuid": "80ce6bcd-8597-4065-be7d-3c5791e1f793",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -6.5,
+      "offsetY": 6.5,
+      "trimX": 42,
+      "trimY": 37,
+      "width": 194,
+      "height": 169,
+      "rawWidth": 291,
+      "rawHeight": 256,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

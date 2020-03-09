@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "64bb8840-56a7-452a-9ced-2846b29bc56f",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 260,
+  "height": 230,
+  "platformSettings": {},
+  "subMetas": {
+    "survivor-reload_handgun_10": {
+      "ver": "1.0.4",
+      "uuid": "a28232af-e575-48fd-82b8-51c9d4e7cc06",
+      "rawTextureUuid": "64bb8840-56a7-452a-9ced-2846b29bc56f",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 10.5,
+      "offsetY": -7,
+      "trimX": 37,
+      "trimY": 40,
+      "width": 207,
+      "height": 164,
+      "rawWidth": 260,
+      "rawHeight": 230,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -19,7 +19,10 @@ export default class joystick extends cc.Component {
     @property
     min_range: number = 0;
     // LIFE-CYCLE CALLBACKS:
+    @property(cc.Node)
+    player : cc.Node = null;
 
+    private touched : boolean = false;
     public dir : cc.Vec2 = cc.v2(0,0);
 
     onLoad () {
@@ -35,6 +38,26 @@ export default class joystick extends cc.Component {
     }
 
     on_stick_move(e: cc.Touch): void {
+        this.touched = true;
+        this.moveStick(e);
+        this.playPlayerClip("player_move");
+    }
+
+    on_stick_end(): void{
+        this.dir = cc.v2(0,0);
+        this.stick.setPosition(cc.v2(0,0));
+        this.touched = false;
+        this.playPlayerClip("player_idle");
+
+    }
+
+    playPlayerClip(clip_name: string){
+        var curret_body_animation : cc.Animation = this.player.getChildByName('body').getComponent(cc.Animation);
+        if(curret_body_animation.currentClip == null || curret_body_animation.getAnimationState(clip_name).isPlaying == false){                
+            curret_body_animation.getAnimationState(clip_name).play();
+        }
+    }
+    moveStick(e: cc.Touch){
         var screen_pos: cc.Vec2 = e.getLocation();
         var pos : cc.Vec2 = this.node.convertToNodeSpaceAR(screen_pos);
 
@@ -51,18 +74,18 @@ export default class joystick extends cc.Component {
 
         this.dir.x = pos.x/len;
         this.dir.y = pos.y/len;
-
-
         this.stick.setPosition(pos);
     }
-
-    on_stick_end(): void{
-        this.dir = cc.v2(0,0);
-        this.stick.setPosition(cc.v2(0,0));
-    }
+    
     start () {
 
     }
 
-    // update (dt) {}
+    update (dt) {
+        if(this.touched){
+            this.playPlayerClip("player_move");  
+        }
+
+    }
+
 }

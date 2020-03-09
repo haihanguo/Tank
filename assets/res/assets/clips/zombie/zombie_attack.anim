@@ -1,0 +1,47 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "zombie_attack",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.06666666666666667,
+  "sample": 60,
+  "speed": 0.1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "skeleton-idle_0": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "e875ea54-581e-4177-b7fe-1c2ab71d35ae"
+                }
+              },
+              {
+                "frame": 0.016666666666666666,
+                "value": {
+                  "__uuid__": "ac28c797-dd4c-4584-b3e4-f1325afbfa8c"
+                }
+              },
+              {
+                "frame": 0.03333333333333333,
+                "value": {
+                  "__uuid__": "864ae1ae-b85b-4f2e-8a7f-bb58b505bc34"
+                }
+              },
+              {
+                "frame": 0.05,
+                "value": {
+                  "__uuid__": "591daf96-a80c-4612-b550-a94427a21111"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "events": []
+}

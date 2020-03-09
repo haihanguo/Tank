@@ -1,0 +1,49 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "handgun_move",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.08333333333333333,
+  "sample": 60,
+  "speed": 0.1,
+  "wrapMode": 2,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "66fe775d-762d-4d1f-ad72-7b5d0088851e"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "7c164034-3870-45b4-b082-e2231fbf8814"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "5359df5f-e4e9-4115-94d7-e26de8fa198a"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "fc057186-d26f-4e8f-adf5-a9b76f018daf"
+            }
+          },
+          {
+            "frame": 0.06666666666666667,
+            "value": {
+              "__uuid__": "48872272-1e67-46fc-8b40-c62deb28f20a"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
