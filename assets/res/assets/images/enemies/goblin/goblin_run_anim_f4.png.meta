@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "f7a64f6b-c580-4f38-8c82-ee6238040477",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 16,
+  "height": 16,
+  "platformSettings": {},
+  "subMetas": {
+    "goblin_run_anim_f4": {
+      "ver": "1.0.4",
+      "uuid": "a47b9e59-aaa4-456c-b8cc-120dfdc523e2",
+      "rawTextureUuid": "f7a64f6b-c580-4f38-8c82-ee6238040477",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0.5,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 0,
+      "width": 13,
+      "height": 16,
+      "rawWidth": 16,
+      "rawHeight": 16,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

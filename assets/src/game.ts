@@ -13,14 +13,14 @@ const {ccclass, property} = cc._decorator;
 export default class game extends cc.Component {
 
 	@property(cc.Prefab)
-    zombie: cc.Prefab = null
+    enemy: cc.Prefab = null
 
-    @property zombieSpawnMinX = 0
-    @property zombieSpawnMaxX = 0
-    @property zombieSpawnMinY = 0
-    @property zombieSpawnMaxY = 0
-    @property zombieMinVelocity = 0
-    @property zombieMaxVelocity = 0
+    @property enemy_spawn_min_x = 0;
+    @property enemy_spawn_max_x = 0;
+    @property enemy_spawn_min_y = 0;
+    @property enemy_spawn_max_y = 0;
+    @property enemy_min_velocity = 0;
+    @property enemy_max_velocity = 0;
 	// FACTORY
 
     // LIFE-CYCLE CALLBACKS:
@@ -28,18 +28,18 @@ export default class game extends cc.Component {
     }
 
     start () {        
-        //this.create_zombie();
+        this.create_enemy();
     }
 	
-    create_zombie() {        
-            const x :number = this.rand_in_range(this.zombieSpawnMinX, this.zombieSpawnMaxX)
-            const y :number = this.rand_in_range(this.zombieSpawnMinY, this.zombieSpawnMaxY)
+    create_enemy() {        
+            const x :number = this.rand_in_range(this.enemy_spawn_min_x, this.enemy_spawn_max_x);
+            const y :number = this.rand_in_range(this.enemy_spawn_min_y, this.enemy_spawn_max_y);
             //const angle = Math.random() * 360
             
             var angle : number = Math.random() * 360; 
-            const velocity = this.rand_in_range(this.zombieMinVelocity, this.zombieMaxVelocity)
+            const velocity = this.rand_in_range(this.enemy_min_velocity, this.enemy_max_velocity);
     
-            const node = cc.instantiate(this.zombie)    
+            const node = cc.instantiate(this.enemy);
             node.setPosition(cc.v2(x, y))
             
             //const body = node.getComponent(cc.RigidBody)
@@ -51,16 +51,16 @@ export default class game extends cc.Component {
     }
 
     schedule_create_zombie() {
-        cc.director.getScheduler().schedule(this.create_zombie, this, 1 + Math.random(), false);
+        cc.director.getScheduler().schedule(this.create_enemy, this, 1 + Math.random(), false);
     }
 
     rand_in_range(min: number, max: number): number {
         return Math.random() * (max - min) + min;
     }
     update(dt){
-        const zombies = this.node.getChildByName("zombie");
-        if(zombies == null || !zombies.isValid){
-            //this.create_zombie();
+        const enemies = this.node.getChildByName("slime");
+        if(enemies == null || !enemies.isValid){
+            this.create_enemy();
         }
     }
 }

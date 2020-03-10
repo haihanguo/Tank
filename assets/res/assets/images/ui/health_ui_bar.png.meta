@@ -1,0 +1,36 @@
+{
+  "ver": "2.3.4",
+  "uuid": "1dcfe473-5e2e-47da-9c29-c4bc1dd54a01",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 80,
+  "height": 16,
+  "platformSettings": {},
+  "subMetas": {
+    "health_ui_bar": {
+      "ver": "1.0.4",
+      "uuid": "fdc4412e-2369-4623-b094-66061edaba87",
+      "rawTextureUuid": "1dcfe473-5e2e-47da-9c29-c4bc1dd54a01",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 8,
+      "offsetY": 0.5,
+      "trimX": 19,
+      "trimY": 4,
+      "width": 58,
+      "height": 7,
+      "rawWidth": 80,
+      "rawHeight": 16,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
