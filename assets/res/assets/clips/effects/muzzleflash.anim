@@ -1,11 +1,11 @@
 {
   "__type__": "cc.AnimationClip",
-  "_name": "handgun_fire",
+  "_name": "muzzleflash",
   "_objFlags": 0,
   "_native": "",
-  "_duration": 0.06666666666666667,
+  "_duration": 0.05,
   "sample": 60,
-  "speed": 0.4,
+  "speed": 0.3,
   "wrapMode": 1,
   "curveData": {
     "comps": {
@@ -27,12 +27,6 @@
             "frame": 0.03333333333333333,
             "value": {
               "__uuid__": "7faa8167-8992-4c3e-9ab0-a2ee5b41cfab"
-            }
-          },
-          {
-            "frame": 0.05,
-            "value": {
-              "__uuid__": "b342d48e-6dd9-4185-b463-01ca6712db32"
             }
           }
         ]

@@ -28,7 +28,9 @@ export default class player extends cc.Component {
 
     @property(cc.Prefab)
     normal_bullet: cc.Prefab = null
- 
+    @property(cc.Prefab)
+    muzzle_flash: cc.Prefab = null
+
     @property
     degree: number = 0;    
 
@@ -54,24 +56,14 @@ export default class player extends cc.Component {
     
     update (dt) {
         this.flipPlayer();
-        this.movePlayer();        
-        //rotation clockwise
-        //degree = 360 - degree;
-        //degree = degree + 90;
-        //this.node.rotation = degree;
-        //angle counterclockwise 
-        //console.log(this.degree);
-               
+        this.movePlayer();                       
     }
 
     movePlayer(){        
         if(this.camera != null){
             this.camera.setPosition(this.node.x + this.offset.x, this.node.y + this.offset.y);
         }
-        if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
-            this.body.linearVelocity = cc.v2(0,0);
-            return;
-        }
+
         let vx: number = this.speed * this.stick.dir.x;
         let vy: number = this.speed * this.stick.dir.y;
         this.body.linearVelocity = cc.v2(vx, vy);
@@ -79,6 +71,11 @@ export default class player extends cc.Component {
         //console.log(this.node.getChildByName('handgun').angle);
         this.autoAim();        
         this.rotateWeapon();
+
+        if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
+            this.body.linearVelocity = cc.v2(0,0);
+            return;
+        }
     }
 
     rotateWeapon(){
@@ -146,7 +143,15 @@ export default class player extends cc.Component {
                                             MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);	
         }
         this.node.addChild(new_bullet);
+        this.createMuzzleflash(firepoint_player_position, new_bullet.angle);
 
+    }
+
+    createMuzzleflash(flash_position : cc.Vec2, flash_angel : number){
+        const new_flash : cc.Node = cc.instantiate(this.muzzle_flash);
+        new_flash.setPosition(flash_position.x * 1.5, flash_position.y * 1.5);
+        new_flash.angle = flash_angel;
+        this.node.addChild(new_flash);
     }
 
     aimLock(){
