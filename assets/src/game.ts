@@ -64,6 +64,7 @@ export default class game extends cc.Component {
         const enemies = this.node.getChildByName("slime");
         if(enemies == null || !enemies.isValid){
             this.create_enemy();
+            this.create_enemy();
         }
         //this.player.getComponent('player').flipPlayer();
         //this.player.getComponent('player').movePlayer();
