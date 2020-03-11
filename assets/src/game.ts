@@ -14,6 +14,8 @@ export default class game extends cc.Component {
 
 	@property(cc.Prefab)
     enemy: cc.Prefab = null
+	@property(cc.Node)
+    player: cc.Node = null
 
     @property enemy_spawn_min_x = 0;
     @property enemy_spawn_max_x = 0;
@@ -28,6 +30,7 @@ export default class game extends cc.Component {
     }
 
     start () {        
+        this.create_enemy();
         this.create_enemy();
     }
 	
@@ -62,5 +65,7 @@ export default class game extends cc.Component {
         if(enemies == null || !enemies.isValid){
             this.create_enemy();
         }
+        //this.player.getComponent('player').flipPlayer();
+        //this.player.getComponent('player').movePlayer();
     }
 }

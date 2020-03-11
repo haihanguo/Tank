@@ -19,6 +19,10 @@ export default class slime extends cc.Component {
     @property
     speed : number = 200;
 
+    @property(cc.Prefab)
+    aim_icon: cc.Prefab = null
+
+    private aimed : boolean = false;
     private onMove : boolean = false;
 
 	onBeginContact(contact, selfCollider, otherCollider) {
@@ -71,7 +75,26 @@ export default class slime extends cc.Component {
             return;
         } 
     }
+    addAimed(){
+        const aim_icon : cc.Node = cc.instantiate(this.aim_icon);
+        this.node.addChild(aim_icon);
+    }
+    removeAimed(){
+        this.node.getChildByName('aimed').destroy();
+    }
+    setAimed(playerAim : boolean){
+        if(playerAim){
+            this.aimed = true;
+        }else{
+            this.aimed = false;
+        }
+    }
     update(dt) {
+        if(this.aimed && this.node.getChildByName('aimed') == null){
+            this.addAimed();
+        }else if(!this.aimed && this.node.getChildByName('aimed') != null){
+            this.removeAimed();
+        }
         this.setupVerlocity();
         this.playAnimation();
         this.checkHealthPoint();

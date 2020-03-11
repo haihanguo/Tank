@@ -852,7 +852,7 @@
       "__uuid__": "461b11fb-dd1e-4eeb-8df0-075144546005"
     },
     "degree": 0,
-    "rotation_lock": true,
+    "auto_aim": true,
     "_id": "178nzeu5FOGpmxGXRvTyjL"
   },
   {
@@ -920,8 +920,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -300,
-        -150,
+        -350,
+        -200,
         0,
         0,
         0,
@@ -1164,8 +1164,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        300,
-        -150,
+        350,
+        -200,
         0,
         0,
         0,
@@ -1389,9 +1389,9 @@
     "_target": null,
     "_alignFlags": 36,
     "_left": 344.193,
-    "_right": -300,
+    "_right": -350,
     "_top": 0,
-    "_bottom": -150,
+    "_bottom": -200,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -2102,10 +2102,10 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 12,
-    "_left": -300,
+    "_left": -350,
     "_right": 0,
     "_top": 0,
-    "_bottom": -150,
+    "_bottom": -200,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -2235,6 +2235,9 @@
     "_enabled": true,
     "enemy": {
       "__uuid__": "468c5742-5049-4ac0-8c8e-8eda95150672"
+    },
+    "player": {
+      "__id__": 12
     },
     "enemy_spawn_min_x": 100,
     "enemy_spawn_max_x": 800,

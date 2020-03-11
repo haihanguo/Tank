@@ -45,47 +45,48 @@ export default class fire_control extends cc.Component {
     }
 
     on_aim_pressed(): void{
-        this.player.getComponent('player').lock_rotation();
+        this.player.getComponent('player').aimLock();
         console.log('on_aim_pressed');
         this.player.getComponent('player').playerShoot();
         this.pressed_time = 0;
         this.fire_button_pressed = true;
     }
     on_aim_moved(e: cc.Touch): void{
-        if(!(this.pressed_time < 0.02)){
-            this.player.getComponent('player').lock_rotation();
-            var screen_pos: cc.Vec2 = e.getLocation();
-            var pos : cc.Vec2 = this.node.convertToNodeSpaceAR(screen_pos);
-            var len: number = pos.len();
-            if(len <= this.min_range){
-                return
-            }
-            if(len > this.max_range){
-                pos.x = pos.x * this.max_range / len;
-                pos.y = pos.y * this.max_range / len;
-            } 
-            this.dir.x = pos.x/len;
-            this.dir.y = pos.y/len;
+        if(this.player.getComponent('player').getAutoAimStatus() === false){
+            if(!(this.pressed_time < 0.2)){
+                this.player.getComponent('player').lock_rotation();
+                var screen_pos: cc.Vec2 = e.getLocation();
+                var pos : cc.Vec2 = this.node.convertToNodeSpaceAR(screen_pos);
+                var len: number = pos.len();
+                if(len <= this.min_range){
+                    return
+                }
+                if(len > this.max_range){
+                    pos.x = pos.x * this.max_range / len;
+                    pos.y = pos.y * this.max_range / len;
+                } 
+                this.dir.x = pos.x/len;
+                this.dir.y = pos.y/len;
+        
+                this.fire_button.setPosition(pos);
     
-            this.fire_button.setPosition(pos);
-
-            var r: number = Math.atan2(this.dir.y, this.dir.x);
-            var player_degree: number = r * 180 / Math.PI;
-
-            this.player.getComponent('player').flipPlayer();
-            if(this.player.getComponent('player').getPlayerFaceDirection() === 'left'){
-                this.player.getChildByName('handgun').angle = 180 - player_degree; 
-            }else{
-                this.player.getChildByName('handgun').angle = player_degree; 
-            }  
+                var r: number = Math.atan2(this.dir.y, this.dir.x);
+                var player_degree: number = r * 180 / Math.PI;
+    
+                this.player.getComponent('player').flipPlayer();
+                if(this.player.getComponent('player').getPlayerFaceDirection() === 'left'){
+                    this.player.getChildByName('handgun').angle = 180 - player_degree; 
+                }else{
+                    this.player.getChildByName('handgun').angle = player_degree; 
+                }  
+            }
         }
 
     }
     on_aim_canceled(): void{
-        this.player.getComponent('player').unlock_rotation();
+        this.player.getComponent('player').aimUnlock();
         //this.dir = cc.v2(0,0);
         this.fire_button.setPosition(cc.v2(0,0));
-
         console.log('on_aim_canceled');
         this.fire_button_pressed = false;
     }
