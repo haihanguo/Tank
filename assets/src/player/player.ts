@@ -17,6 +17,9 @@ export default class player extends cc.Component {
     @property
     speed: number = 0;
 
+    @property
+    health_point :number = 100;
+
     @property(cc.Node)
     camera: cc.Node = null;
 
@@ -25,6 +28,10 @@ export default class player extends cc.Component {
 
     @property(fire_control)
     aim_control: fire_control = null;
+
+    @property(cc.Node)
+    health_bar: cc.Node = null;
+
 
     @property(cc.Prefab)
     normal_bullet: cc.Prefab = null
@@ -41,6 +48,7 @@ export default class player extends cc.Component {
     private body: cc.RigidBody = null;
     private aim_lock: boolean = true;
     private aimed_enemy_uid : string = "";
+
 
     onLoad () {
         this.node.zIndex = 0;

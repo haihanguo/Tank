@@ -187,7 +187,7 @@
     "_id": ""
   },
   {
-    "__type__": "5354cTcHnFPW4024RG6jGJ8",
+    "__type__": "43b75aKcUVLAq+52STyzBLg",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -196,6 +196,7 @@
     "_enabled": true,
     "health_point": 100,
     "speed": 50,
+    "attack_gap": 5,
     "aim_icon": {
       "__uuid__": "80eb87e5-a0f8-4691-9246-851c3f00c4e7"
     },

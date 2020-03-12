@@ -13,8 +13,8 @@ export default class health_ui extends cc.Component {
     @property(cc.Node)
     healthbar: cc.Node = null;
 
-
-    // LIFE-CYCLE CALLBACKS:
+    @property(cc.Node)
+    player: cc.Node = null;
 
     onLoad () {        
         this.node.getChildByName('health_ui_bar').getComponent(cc.Sprite).fillStart = 1;
@@ -24,5 +24,7 @@ export default class health_ui extends cc.Component {
 
     }
 
-    // update (dt) {}
+    update (dt) {
+        this.node.getChildByName('health_ui_bar').getComponent(cc.Sprite).fillStart = this.player.getComponent('player').health_point / 100;
+    }
 }
