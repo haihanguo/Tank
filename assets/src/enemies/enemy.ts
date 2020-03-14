@@ -23,13 +23,16 @@ export default class enemy extends cc.Component {
     attack_gap : number = 0;
 
     @property(cc.Prefab)
-    aim_icon: cc.Prefab = null
+    aim_effect: cc.Prefab = null
 
+    @property(cc.Prefab)
+    prepare_attack_effect: cc.Prefab = null
 
     public aimed : boolean = false;
     public on_move : boolean = false;
     public ai_status : MathUtilities.AiStatus = null;
     public time : number = null;
+    public face_to_target : string = "right";
 
 	onBeginContact(contact, selfCollider, otherCollider) {
         //console.log(otherCollider.node);
@@ -39,7 +42,15 @@ export default class enemy extends cc.Component {
 		}else if(otherCollider.node.name === "player" && this.ai_status ==MathUtilities.AiStatus.attack){
             console.log('attacked!');
             otherCollider.node.getComponent("player").health_point -= 10;
-            //selfCollider.node.destroy();
+            console.log(otherCollider.node.getPosition().sub(selfCollider.node.getPosition()));
+
+            let attack_dir = otherCollider.node.getPosition().sub(selfCollider.node.getPosition());
+            console.log(attack_dir);
+            attack_dir = attack_dir.normalizeSelf();
+            console.log(attack_dir, attack_dir.mulSelf(-1500));
+            otherCollider.node.getComponent(cc.RigidBody).applyLinearImpulse(cc.v2(attack_dir.x, attack_dir.y), otherCollider.node.convertToWorldSpaceAR(otherCollider.node.getPosition()), true);
+            console.log(attack_dir);
+            console.log('col end!');
         }
 	}
     onLoad () {
@@ -55,11 +66,22 @@ export default class enemy extends cc.Component {
             speed_scale = 1;
         }
         var target_dir : number = this.lookAtObj(this.node.getParent().getChildByName('player').getPosition());
+        this.faceToTargetFaceDirection()
         var body : cc.RigidBody = this.node.getComponent(cc.RigidBody)
         body.linearVelocity = cc.v2(Math.cos(target_dir) * this.speed * speed_scale, Math.sin(-target_dir) *  this.speed * speed_scale);
     }
 
-
+    faceToTargetFaceDirection(){
+        if(this.face_to_target == "left"){
+            if(this.node.scaleX < 0){
+                this.node.scaleX *= -1;
+            }
+        }else{
+            if(this.node.scaleX > 0){
+                this.node.scaleX *= -1;
+            }
+        }
+    }
     enemyMove(){
         this.setupVerlocity();
         this.playAnimation();
@@ -92,6 +114,12 @@ export default class enemy extends cc.Component {
     lookAtObj(target : cc.Vec2){        
         var dx : number= target.x - this.node.x;
         var dy : number = target.y - this.node.y;
+        if(dx > 0){
+            this.face_to_target = "left";
+        }else{
+            this.face_to_target = "right";
+        }
+        this.face_to_target
         //console.log(dx, dy);
         var dir: cc.Vec2 = cc.v2(dx,dy);
         var angle: number = dir.signAngle(cc.v2(1,0));
@@ -129,7 +157,7 @@ export default class enemy extends cc.Component {
         } 
     }
     addAimed(){
-        const aim_icon : cc.Node = cc.instantiate(this.aim_icon);
+        const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
         this.node.addChild(aim_icon);
     }
     removeAimed(){

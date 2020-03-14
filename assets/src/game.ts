@@ -61,8 +61,10 @@ export default class game extends cc.Component {
         return Math.random() * (max - min) + min;
     }
     update(dt){
-        const enemies = this.node.getChildByName("slime");
-        if(enemies == null || !enemies.isValid){
+        let enemies : cc.Node[] = this.node.children.filter(function (e){
+            return e.name == 'slime';
+        });
+        if(enemies.length < 10){
             this.create_enemy();
             //this.create_enemy();
         }

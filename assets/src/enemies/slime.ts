@@ -40,7 +40,7 @@ export default class slime extends enemy {
         }else if (this.ai_status == MathUtilities.AiStatus.attack) {
             //this.enemyMove();
             let newTime = new Date().getTime();
-            if ((newTime - this.time) >= 0.5 * 1000) {
+            if ((newTime - this.time) >= 0.2 * 1000) {
                 this.time = newTime;
                 this.ai_status = MathUtilities.AiStatus.idle;//变更为行走状态
                 //this.node.getComponent(cc.Animation).play("monster2_1");//播放动画
@@ -48,7 +48,7 @@ export default class slime extends enemy {
         }else if(this.ai_status == MathUtilities.AiStatus.idle){
             this.enemyIdle();
             let newTime = new Date().getTime();
-            if ((newTime - this.time) >= 1 * 1000) {
+            if ((newTime - this.time) >= 0.5 * 1000) {
                 this.time = newTime;
                 this.ai_status = MathUtilities.AiStatus.move;//变更为行走状态
                 //this.node.getComponent(cc.Animation).play("monster2_1");//播放动画
