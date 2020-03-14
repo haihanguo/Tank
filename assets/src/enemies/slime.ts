@@ -28,7 +28,7 @@ export default class slime extends enemy {
             this.removeAimed();
         }
         this.checkHealthPoint();
-        console.log(this.ai_status);
+        //console.log(this.ai_status);
         if (this.ai_status == MathUtilities.AiStatus.move) {
             this.enemyMove();
             let newTime = new Date().getTime();
@@ -40,10 +40,19 @@ export default class slime extends enemy {
         }else if (this.ai_status == MathUtilities.AiStatus.attack) {
             //this.enemyMove();
             let newTime = new Date().getTime();
-            if ((newTime - this.time) >= 0.2 * 1000) {
+            if(this.node.getChildByName('exclamation_point').getChildByName('exclamation')== null){
+                const prepare_attack_effect : cc.Node = cc.instantiate(this.prepare_attack_effect);
+                this.node.getChildByName('exclamation_point').addChild(prepare_attack_effect);
+            }
+
+            if ((newTime - this.time) >= 0.3 * 1000) {
+                if(this.node.getChildByName('exclamation_point').getChildByName('exclamation')!= null){
+                    this.node.getChildByName('exclamation_point').getChildByName('exclamation').destroy();
+                }
+    
                 this.time = newTime;
                 this.ai_status = MathUtilities.AiStatus.idle;//变更为行走状态
-                //this.node.getComponent(cc.Animation).play("monster2_1");//播放动画
+                this.node.getComponent(cc.Animation).play("slime_idle");//播放动画
             }
         }else if(this.ai_status == MathUtilities.AiStatus.idle){
             this.enemyIdle();
@@ -51,7 +60,7 @@ export default class slime extends enemy {
             if ((newTime - this.time) >= 0.5 * 1000) {
                 this.time = newTime;
                 this.ai_status = MathUtilities.AiStatus.move;//变更为行走状态
-                //this.node.getComponent(cc.Animation).play("monster2_1");//播放动画
+                this.node.getComponent(cc.Animation).play("slime_move");//播放动画
             }
         }
     }

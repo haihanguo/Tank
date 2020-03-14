@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "enemy_dead_explosion",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.06666666666666667,
+  "sample": 60,
+  "speed": 0.1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "530d6cd4-fcac-49f1-bb5a-ab6d87a61175"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "ebc7077e-f92f-4870-b31a-fd4ed38d3eb8"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "3902117c-c1e6-4e5e-8e80-96fda1d68caf"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "cf353bc7-80ef-4801-946e-7d90a5120379"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

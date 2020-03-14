@@ -68,8 +68,9 @@ export default class joystick extends cc.Component {
         }
 
         if(len > this.max_range){
-            pos.x = pos.x * this.max_range / len;
-            pos.y = pos.y * this.max_range / len;
+            len = this.max_range;
+            pos.normalizeSelf();
+            pos = cc.v2(pos.x * this.max_range, pos.y * this.max_range);
         } 
 
         this.dir.x = pos.x/len;

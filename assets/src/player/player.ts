@@ -19,6 +19,8 @@ export default class player extends cc.Component {
 
     @property
     health_point :number = 100;
+    @property
+    shield_point : number = 100;
 
     @property(cc.Node)
     camera: cc.Node = null;
@@ -194,10 +196,10 @@ export default class player extends cc.Component {
         let enemies : cc.Node[] = this.node.parent.children.filter(function (e){
             return e.name == 'slime';
         });
-        let min_distance : number = 500;
+        let min_distance : number = 200;
         let closest_enemy : cc.Node = null;
         enemies.forEach(function(value){
-            let enemy_distance : number = this.distanceToObj(value.getPosition();
+            let enemy_distance : number = this.distanceToObj(value.getPosition());
             if(enemy_distance < min_distance){
                 min_distance = enemy_distance;
                 closest_enemy = value;
@@ -230,6 +232,13 @@ export default class player extends cc.Component {
             angle = this.lookAtObj(closest_enemy.getPosition());
             distance = this.distanceToObj(closest_enemy.getPosition());
         }else{
+            if(this.aimed_enemy_uid != ''){
+                //remove old aim
+                let last_aimed_enemy : cc.Node = this.node.parent.getChildByUuid(this.aimed_enemy_uid);
+                if(last_aimed_enemy != null){
+                    last_aimed_enemy.getComponent('slime').setAimed(false);
+                }
+            }
             this.aim_lock = false;
         }
         //console.log(angle * 180 / Math.PI, distance);

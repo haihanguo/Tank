@@ -29,11 +29,16 @@ export default class shield_ui extends cc.Component {
 
     update (dt) {
         this.timer += dt;
+        this.shieldbar.fillStart = this.player.getComponent("player").shield_point/100;
         //console.log(this.timer, this.shieldbar.fillStart);
-        if(this.timer >= 3 && this.shieldbar.fillStart < 1){
+        if(this.timer >= 3 && this.player.getComponent("player").shield_point < 100){
             //console.log(this.timer, this.shieldbar.fillStart);
-            this.shieldbar.fillStart += 0.2;
+            this.player.getComponent("player").shield_point += 10;
             this.timer = 0;
         }
+        if(this.player.getComponent("player").shield_point > 100){
+            this.player.getComponent("player").shield_point = 100;
+        }
+        
     }
 }

@@ -28,6 +28,9 @@ export default class enemy extends cc.Component {
     @property(cc.Prefab)
     prepare_attack_effect: cc.Prefab = null
 
+    @property(cc.Prefab)
+    dead_effect: cc.Prefab = null
+
     public aimed : boolean = false;
     public on_move : boolean = false;
     public ai_status : MathUtilities.AiStatus = null;
@@ -39,18 +42,25 @@ export default class enemy extends cc.Component {
 		if (otherCollider.node.name === "tank_bullet") {
 			this.health_point -= 20;
 			otherCollider.node.destroy();
-		}else if(otherCollider.node.name === "player" && this.ai_status ==MathUtilities.AiStatus.attack){
+		}else if(otherCollider.node.name === "player" && this.ai_status == MathUtilities.AiStatus.attack){
             console.log('attacked!');
-            otherCollider.node.getComponent("player").health_point -= 10;
-            console.log(otherCollider.node.getPosition().sub(selfCollider.node.getPosition()));
-
+            if(otherCollider.node.getComponent("player").shield_point > 50){
+                otherCollider.node.getComponent("player").shield_point -= 50;
+            }else{
+                var attact_point_left :number = 0;
+                attact_point_left = 50 - otherCollider.node.getComponent("player").shield_point;
+                otherCollider.node.getComponent("player").shield_point = 0;
+                otherCollider.node.getComponent("player").health_point -= attact_point_left;
+            }
+            
+            //console.log(otherCollider.node.getPosition().sub(selfCollider.node.getPosition()));
             let attack_dir = otherCollider.node.getPosition().sub(selfCollider.node.getPosition());
-            console.log(attack_dir);
+            //console.log(attack_dir);
             attack_dir = attack_dir.normalizeSelf();
-            console.log(attack_dir, attack_dir.mulSelf(-1500));
+            //console.log(attack_dir, attack_dir.mulSelf(-1500));
             otherCollider.node.getComponent(cc.RigidBody).applyLinearImpulse(cc.v2(attack_dir.x, attack_dir.y), otherCollider.node.convertToWorldSpaceAR(otherCollider.node.getPosition()), true);
-            console.log(attack_dir);
-            console.log('col end!');
+            //console.log(attack_dir);
+            //console.log('col end!');
         }
 	}
     onLoad () {
@@ -93,7 +103,7 @@ export default class enemy extends cc.Component {
         this.setupVerlocity(0);
     }
     physicAttackPlayer(){
-        this.setupVerlocity(10);
+        this.setupVerlocity(5);
     }
     update(dt) {
         //if(this.aimed && this.node.getChildByName('aimed') == null){
@@ -151,6 +161,9 @@ export default class enemy extends cc.Component {
 
     checkHealthPoint(){
         if (this.health_point <= 0){
+            const dead_effect : cc.Node = cc.instantiate(this.dead_effect);
+            dead_effect.setPosition(this.node.getPosition());
+            this.node.parent.addChild(dead_effect);
             this.node.destroy()
         }else{
             return;
