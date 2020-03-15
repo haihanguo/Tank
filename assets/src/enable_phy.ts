@@ -21,6 +21,7 @@ export default class enable_phy extends cc.Component {
     onLoad () {
         cc.director.getPhysicsManager().enabled = true;
         cc.director.getPhysicsManager().gravity = this.gravity;
+        cc.director.getCollisionManager().enabled = true;
 
         if(this.is_debug){
             // enable all debug draw info

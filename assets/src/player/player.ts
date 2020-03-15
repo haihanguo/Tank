@@ -52,9 +52,12 @@ export default class player extends cc.Component {
     private aimed_enemy_uid : string = "";
 
 
+
+
     onLoad () {
         this.node.zIndex = 0;
         this.body = this.getComponent(cc.RigidBody);
+        
     }
 
     start () {
@@ -63,7 +66,11 @@ export default class player extends cc.Component {
         }
         
     }
-    
+    onCollisionEnter(other, self) {
+        if (other.node.name === "gold_small") { 
+            other.node.destroy();
+        }
+    }
     update (dt) {
         this.flipPlayer();
         this.movePlayer();                       

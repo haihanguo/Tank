@@ -23,13 +23,26 @@ export default class enemy extends cc.Component {
     attack_gap : number = 0;
 
     @property(cc.Prefab)
-    aim_effect: cc.Prefab = null
+    aim_effect: cc.Prefab = null;
 
     @property(cc.Prefab)
-    prepare_attack_effect: cc.Prefab = null
+    prepare_attack_effect: cc.Prefab = null;
 
     @property(cc.Prefab)
-    dead_effect: cc.Prefab = null
+    dead_effect: cc.Prefab = null;
+
+    @property(cc.Prefab)
+    flying_health_point = null;
+
+    @property(cc.Prefab)
+    coin_drop_small = null;
+
+    @property(cc.Prefab)
+    coin_drop_mid = null;
+
+    @property(cc.Prefab)
+    coin_drop_large = null;
+
 
     public aimed : boolean = false;
     public on_move : boolean = false;
@@ -40,7 +53,8 @@ export default class enemy extends cc.Component {
 	onBeginContact(contact, selfCollider, otherCollider) {
         //console.log(otherCollider.node);
 		if (otherCollider.node.name === "tank_bullet") {
-			this.health_point -= 20;
+            this.health_point -= 20;
+            this.flyHealthPoint(20);
 			otherCollider.node.destroy();
 		}else if(otherCollider.node.name === "player" && this.ai_status == MathUtilities.AiStatus.attack){
             console.log('attacked!');
@@ -118,7 +132,12 @@ export default class enemy extends cc.Component {
     }
 
 
-
+    flyHealthPoint(show_number : number){
+        let flying_health_point : cc.Node = cc.instantiate(this.flying_health_point);        
+        flying_health_point.getComponent(cc.Label).string = "-" + show_number;
+        flying_health_point.setPosition(this.node.getPosition());
+        this.node.parent.addChild(flying_health_point);        
+    }
 
 
     lookAtObj(target : cc.Vec2){        
@@ -164,6 +183,12 @@ export default class enemy extends cc.Component {
             const dead_effect : cc.Node = cc.instantiate(this.dead_effect);
             dead_effect.setPosition(this.node.getPosition());
             this.node.parent.addChild(dead_effect);
+
+            const coin_drop : cc.Node = cc.instantiate(this.coin_drop_small);
+            coin_drop.setPosition(this.node.getPosition());
+            this.node.parent.addChild(coin_drop);
+
+
             this.node.destroy()
         }else{
             return;

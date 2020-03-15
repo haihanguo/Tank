@@ -281,6 +281,18 @@
     "dead_effect": {
       "__uuid__": "9c27b285-d47e-4172-afbe-84e4b4eb11ad"
     },
+    "flying_health_point": {
+      "__uuid__": "5a54b7bf-4ab3-4187-9c95-118da133d299"
+    },
+    "coin_drop_small": {
+      "__uuid__": "f5c76b56-4eb8-4713-a2ae-710d1a7f6bf4"
+    },
+    "coin_drop_mid": {
+      "__uuid__": "878969e6-4ee4-4cb6-bff5-b9fcc31b14ec"
+    },
+    "coin_drop_large": {
+      "__uuid__": "e1189f28-ae81-459b-964a-38b8a909a438"
+    },
     "_id": ""
   },
   {
