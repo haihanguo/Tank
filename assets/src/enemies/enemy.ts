@@ -35,14 +35,7 @@ export default class enemy extends cc.Component {
     flying_health_point = null;
 
     @property(cc.Prefab)
-    coin_drop_small = null;
-
-    @property(cc.Prefab)
-    coin_drop_mid = null;
-
-    @property(cc.Prefab)
-    coin_drop_large = null;
-
+    gold_drop = null;
 
     public aimed : boolean = false;
     public on_move : boolean = false;
@@ -50,13 +43,15 @@ export default class enemy extends cc.Component {
     public time : number = null;
     public face_to_target : string = "right";
 
+
+    
 	onBeginContact(contact, selfCollider, otherCollider) {
         //console.log(otherCollider.node);
-		if (otherCollider.node.name === "tank_bullet") {
+		if (otherCollider.node.name === "fireball") {
             this.health_point -= 20;
             this.flyHealthPoint(20);
 			otherCollider.node.destroy();
-		}else if(otherCollider.node.name === "player" && this.ai_status == MathUtilities.AiStatus.attack){
+		}else if(otherCollider.node.name === "player" && this.ai_status === MathUtilities.AiStatus.attack){
             console.log('attacked!');
             if(otherCollider.node.getComponent("player").shield_point > 50){
                 otherCollider.node.getComponent("player").shield_point -= 50;
@@ -78,7 +73,12 @@ export default class enemy extends cc.Component {
         }
 	}
     onLoad () {
-
+        this.node.zIndex = 0;
+        console.log('add enemy');
+        
+    }
+    attachTouchEvent(){
+        this.node.on(cc.Node.EventType.TOUCH_START, this.changeAimedStatus, this);
     }
 
     start () {
@@ -120,17 +120,8 @@ export default class enemy extends cc.Component {
         this.setupVerlocity(5);
     }
     update(dt) {
-        //if(this.aimed && this.node.getChildByName('aimed') == null){
-        //    this.addAimed();
-        //}else if(!this.aimed && this.node.getChildByName('aimed') != null){
-        //    this.removeAimed();
-        //}
-        //this.setupVerlocity();
-        //this.playAnimation();
-        //this.checkHealthPoint();
-        //console.log(this.distanceToObj(this.node.getParent().getChildByName('player').getPosition()));
-    }
 
+    }
 
     flyHealthPoint(show_number : number){
         let flying_health_point : cc.Node = cc.instantiate(this.flying_health_point);        
@@ -157,7 +148,7 @@ export default class enemy extends cc.Component {
     distanceToObj(target : cc.Vec2){
         var dx : number= target.x - this.node.x;
         var dy : number = target.y - this.node.y;
-        var distance : number = (dx*dx)+(dy*dy);
+        var distance : number = Math.sqrt((dx*dx)+(dy*dy));
         return distance;
     }
 
@@ -184,9 +175,10 @@ export default class enemy extends cc.Component {
             dead_effect.setPosition(this.node.getPosition());
             this.node.parent.addChild(dead_effect);
 
-            const coin_drop : cc.Node = cc.instantiate(this.coin_drop_small);
-            coin_drop.setPosition(this.node.getPosition());
-            this.node.parent.addChild(coin_drop);
+            const gold_drop : cc.Node = cc.instantiate(this.gold_drop);
+            gold_drop.getComponent('drops').setDropDetails('gold', 2000);
+            gold_drop.setPosition(this.node.getPosition());
+            this.node.parent.addChild(gold_drop);
 
 
             this.node.destroy()
@@ -194,9 +186,10 @@ export default class enemy extends cc.Component {
             return;
         } 
     }
-    addAimed(){
+    addAimed(){        
         const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
         this.node.addChild(aim_icon);
+        console.log(this.node);
     }
     removeAimed(){
         this.node.getChildByName('aimed').destroy();
@@ -207,5 +200,24 @@ export default class enemy extends cc.Component {
         }else{
             this.aimed = false;
         }
+    }
+    changeAimedStatus(){
+        //see if there is an enemy is aimed
+        let aimed_enemy : cc.Node[] = this.node.parent.children.filter(function (e){
+            return e.getChildByName("aimed");
+        });
+        //there is an aimed enemy
+        if(aimed_enemy.length > 0){
+            //if it is self
+            if(aimed_enemy[0].uuid === this.node.uuid){
+                this.removeAimed();
+            }else{
+                this.addAimed();
+                aimed_enemy[0].getComponent('enemy').removeAimed();
+            }
+        }else{
+            this.addAimed();
+        }
+        
     }
 }

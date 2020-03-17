@@ -44,7 +44,9 @@ export default class player extends cc.Component {
     degree: number = 0;    
 
     @property
-    auto_aim : boolean = true;
+    auto_aim : boolean = false;
+
+
 
     private offset: cc.Vec2 = cc.v2(0,0);
     private body: cc.RigidBody = null;
@@ -67,7 +69,7 @@ export default class player extends cc.Component {
         
     }
     onCollisionEnter(other, self) {
-        if (other.node.name === "gold_small") { 
+        if (other.node.name === "gold") { 
             other.node.destroy();
         }
     }
@@ -86,8 +88,15 @@ export default class player extends cc.Component {
         this.body.linearVelocity = cc.v2(vx, vy);
 
         //console.log(this.node.getChildByName('handgun').angle);
-        this.autoAim();        
+        if(this.auto_aim === true){
+            this.autoAim();        
+            
+        }
         this.rotateWeapon();
+
+
+
+
 
         if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
             this.body.linearVelocity = cc.v2(0,0);
@@ -135,6 +144,13 @@ export default class player extends cc.Component {
             }
         }
     }
+
+    castSpell(){
+        const new_spell : cc.Node = cc.instantiate(this.normal_bullet);
+        new_spell.setPosition(this.node.getPosition());
+        this.node.addChild(new_spell);
+    }
+
     creatBullet() {
         let player_weapon :cc.Node = this.node.getChildByName('handgun');
         let player_wepeon_firepoint : cc.Node = player_weapon.getChildByName('firepoint');
@@ -146,15 +162,17 @@ export default class player extends cc.Component {
         let bullet_position : cc.Vec2 = firepoint_player_position;
         const new_bullet : cc.Node = cc.instantiate(this.normal_bullet);
         //console.log(player_weapon.angle, firepoint_player_position.x, firepoint_player_position.y, bullet_position.x, bullet_position.y);
-        new_bullet.setPosition(bullet_position.x * 0.5, bullet_position.y * 0.5);
+        //new_bullet.setPosition(bullet_position.x * 0.6, bullet_position.y * 0.6);
         new_bullet.angle = angle;
         const bullet_body : cc.RigidBody = new_bullet.getComponent(cc.RigidBody);
         bullet_body.linearVelocity = cc.v2(MathUtilities.sind(-(new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
                                             MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);	
         if(this.getPlayerFaceDirection() === "right"){
             bullet_body.linearVelocity = cc.v2(MathUtilities.sind(-(new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
-                                            MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);            
+                                            MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);
+            new_bullet.setPosition(bullet_position.x * 0.6, bullet_position.y * 0.6);            
         }else{
+            new_bullet.setPosition(bullet_position.x * 1.3, bullet_position.y * 1.3);
             //new_bullet.scaleX *= -1.0;
             bullet_body.linearVelocity = cc.v2(MathUtilities.sind((new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
                                             MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);	
@@ -183,7 +201,8 @@ export default class player extends cc.Component {
         return this.auto_aim;
     }
     playerShoot(){
-        this.creatBullet();
+        this.castSpell();
+        //this.creatBullet();
     }
     lookAtObj(target : cc.Vec2){        
         let dx : number= target.x - this.node.x;

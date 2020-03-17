@@ -27,6 +27,7 @@ export default class game extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
     onLoad () {
+        this.node.zIndex = -5;
     }
 
     start () {        

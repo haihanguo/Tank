@@ -11,56 +11,37 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class slime extends enemy {
 
-
+    public distance_to_player : number = null;
+    public ready_attack : boolean = false;
     onLoad () {
-
+        this.attachTouchEvent()
+        this.ai_status = MathUtilities.AiStatus.idle;
+        this.node.getComponent(cc.Animation).play("slime_idle");
     }
 
     start () {
-        this.ai_status = MathUtilities.AiStatus.idle;
+
         this.time = new Date().getTime();
     }
 
     update(dt) {
-        if(this.aimed && this.node.getChildByName('aimed') == null){
-            this.addAimed();
-        }else if(!this.aimed && this.node.getChildByName('aimed') != null){
-            this.removeAimed();
-        }
         this.checkHealthPoint();
-        //console.log(this.ai_status);
-        if (this.ai_status == MathUtilities.AiStatus.move) {
-            this.enemyMove();
-            let newTime = new Date().getTime();
-            if ((newTime - this.time) >= this.attack_gap * 1000) {
-                this.attackPlayer();//攻击玩家
-                this.ai_status = MathUtilities.AiStatus.attack;
-                this.time = newTime;
+        this.distance_to_player = this.distanceToObj(this.node.getParent().getChildByName('player').getPosition());
+        if(this.distance_to_player >= 600){
+            this.ai_status = MathUtilities.AiStatus.idle;
+            this.enemyIdle();
+            if(!this.node.getComponent(cc.Animation).getAnimationState('slime_idle').isPlaying){
+                this.node.getComponent(cc.Animation).play("slime_idle");
             }
-        }else if (this.ai_status == MathUtilities.AiStatus.attack) {
-            //this.enemyMove();
-            let newTime = new Date().getTime();
+        }else if(this.ai_status === MathUtilities.AiStatus.move || (this.distance_to_player < 400 && this.distance_to_player > 20)){
+            console.log(this.distance_to_player);
+            this.enemyMove();
+            this.ai_status = MathUtilities.AiStatus.move;
+            this.node.getComponent(cc.Animation).getAnimationState('slime_move').play;
+        }else if(this.ai_status === MathUtilities.AiStatus.attack){
             if(this.node.getChildByName('exclamation_point').getChildByName('exclamation')== null){
                 const prepare_attack_effect : cc.Node = cc.instantiate(this.prepare_attack_effect);
                 this.node.getChildByName('exclamation_point').addChild(prepare_attack_effect);
-            }
-
-            if ((newTime - this.time) >= 0.3 * 1000) {
-                if(this.node.getChildByName('exclamation_point').getChildByName('exclamation')!= null){
-                    this.node.getChildByName('exclamation_point').getChildByName('exclamation').destroy();
-                }
-    
-                this.time = newTime;
-                this.ai_status = MathUtilities.AiStatus.idle;//变更为行走状态
-                this.node.getComponent(cc.Animation).play("slime_idle");//播放动画
-            }
-        }else if(this.ai_status == MathUtilities.AiStatus.idle){
-            this.enemyIdle();
-            let newTime = new Date().getTime();
-            if ((newTime - this.time) >= 0.5 * 1000) {
-                this.time = newTime;
-                this.ai_status = MathUtilities.AiStatus.move;//变更为行走状态
-                this.node.getComponent(cc.Animation).play("slime_move");//播放动画
             }
         }
     }

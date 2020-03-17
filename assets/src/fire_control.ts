@@ -35,7 +35,7 @@ export default class fire_control extends cc.Component {
         console.log('firecontrol setup!');
         this.dir = cc.v2(0,100);
         this.fire_button.on(cc.Node.EventType.TOUCH_START, this.on_aim_pressed, this);
-        //this.fire_button.on(cc.Node.EventType.TOUCH_MOVE, this.on_aim_moved, this);
+        this.fire_button.on(cc.Node.EventType.TOUCH_MOVE, this.on_aim_moved, this);
         this.fire_button.on(cc.Node.EventType.TOUCH_END, this.on_aim_canceled, this);
         this.fire_button.on(cc.Node.EventType.TOUCH_CANCEL, this.on_aim_canceled, this);
     }
@@ -47,16 +47,17 @@ export default class fire_control extends cc.Component {
     on_aim_pressed(): void{
         this.player.getComponent('player').aimLock();
         console.log('on_aim_pressed');
-        this.player.getComponent('player').playerShoot();
+        //this.player.getComponent('player').playerShoot();
         this.pressed_time = 0;
-        this.node.scaleX = 1.1;
-        this.node.scaleY = 1.1;
+        //this.node.scaleX = 1.05;
+        //this.node.scaleY = 1.05;
         this.fire_button_pressed = true;
     }
     on_aim_moved(e: cc.Touch): void{
         if(this.player.getComponent('player').getAutoAimStatus() === false){
-            if(!(this.pressed_time < 0.2)){
-                this.player.getComponent('player').lock_rotation();
+            //console.log('false');
+
+                //this.player.getComponent('player').lock_rotation();
                 var screen_pos: cc.Vec2 = e.getLocation();
                 var pos : cc.Vec2 = this.node.convertToNodeSpaceAR(screen_pos);
                 var len: number = pos.len();
@@ -75,13 +76,13 @@ export default class fire_control extends cc.Component {
                 var r: number = Math.atan2(this.dir.y, this.dir.x);
                 var player_degree: number = r * 180 / Math.PI;
     
-                this.player.getComponent('player').flipPlayer();
+                //this.player.getComponent('player').flipPlayer();
                 if(this.player.getComponent('player').getPlayerFaceDirection() === 'left'){
                     this.player.getChildByName('handgun').angle = 180 - player_degree; 
                 }else{
                     this.player.getChildByName('handgun').angle = player_degree; 
                 }  
-            }
+
         }
 
     }
@@ -93,15 +94,18 @@ export default class fire_control extends cc.Component {
         this.fire_button_pressed = false;
         this.node.scaleX = 1;
         this.node.scaleY = 1;
+        this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = 0;
     }
     update (dt) {
         if(this.fire_button_pressed){
+            //console.log(this.node.getChildByName('fire_background_fill'));
+            this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = this.pressed_time/0.5;
             this.pressed_time +=dt;
             //console.log(this.pressed_time);
-            if(this.pressed_time >= 0.25){
+            if(this.pressed_time >= 0.5){
                 this.player.getComponent('player').playerShoot();
                 this.pressed_time = 0;
             } 
-        }        
+        }
     }
 }
