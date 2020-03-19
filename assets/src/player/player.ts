@@ -46,14 +46,14 @@ export default class player extends cc.Component {
     @property
     auto_aim : boolean = false;
 
-
+    @property(cc.Node)
+    status_text: cc.Node = null;
 
     private offset: cc.Vec2 = cc.v2(0,0);
     private body: cc.RigidBody = null;
     private aim_lock: boolean = true;
-    private aimed_enemy_uid : string = "";
-
-
+    public aimed_enemy : cc.Node = null;
+    public move_lock : boolean = false;
 
 
     onLoad () {
@@ -74,121 +74,53 @@ export default class player extends cc.Component {
         }
     }
     update (dt) {
-        this.flipPlayer();
-        this.movePlayer();                       
+        //this.flipPlayer();
+        this.movePlayer();      
     }
 
     movePlayer(){        
         if(this.camera != null){
             this.camera.setPosition(this.node.x + this.offset.x, this.node.y + this.offset.y);
         }
-
+        if(this.move_lock){
+            this.body.linearVelocity = cc.v2(0,0);
+            return;
+        }
         let vx: number = this.speed * this.stick.dir.x;
         let vy: number = this.speed * this.stick.dir.y;
         this.body.linearVelocity = cc.v2(vx, vy);
-
-        //console.log(this.node.getChildByName('handgun').angle);
-        if(this.auto_aim === true){
-            this.autoAim();        
-            
-        }
-        this.rotateWeapon();
-
-
-
-
 
         if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
             this.body.linearVelocity = cc.v2(0,0);
             return;
         }
     }
-
-    rotateWeapon(){
-        if(this.aim_lock === false){
-            if(this.getPlayerFaceDirection() === 'left'){
-                this.node.getChildByName('handgun').angle = 180 - this.degree; 
-            }else{
-                this.node.getChildByName('handgun').angle = this.degree; 
-            }
-        }
-    }
     getPlayerFaceDirection(){        
         if(this.node.scaleX > 0){
-            return 'right';                         
+            return 1;                         
         }else{
-            return 'left';            
+            return -1;            
         }
     }
-
-    flipPlayer(){
+    flipPlayer(player_angel? : number){
         //flip player image if angle > 180
         let r: number = Math.atan2(this.stick.dir.y, this.stick.dir.x);
         this.degree = r * 180 / Math.PI;
 
-        let player_weapon :cc.Node = this.node.getChildByName('handgun');
-        let player_wepeon_firepoint : cc.Node = player_weapon.getChildByName('firepoint');
-        //check if gun point position x larger than gun position x
-        //console.log(player_weapon.angle);
-        if(player_weapon.convertToWorldSpaceAR(player_wepeon_firepoint.getPosition()).x - player_weapon.convertToWorldSpaceAR(player_weapon.getPosition()).x > 0){
-            if(!(player_weapon.angle > 80 && player_weapon.angle < 100)){
+        if(player_angel == null){
+
+        }else{
+            if(player_angel < 90 && player_angel > -90){
                 if(this.node.scaleX < 0){
                     this.node.scaleX *= -1.0;
                 }
-            }            
-        }else{
-            if(!(player_weapon.angle > 80 && player_weapon.angle < 100)){
+            }else{
                 if(this.node.scaleX > 0){
                     this.node.scaleX *= -1.0;
                 }
             }
-        }
+        }        
     }
-
-    castSpell(){
-        const new_spell : cc.Node = cc.instantiate(this.normal_bullet);
-        new_spell.setPosition(this.node.getPosition());
-        this.node.addChild(new_spell);
-    }
-
-    creatBullet() {
-        let player_weapon :cc.Node = this.node.getChildByName('handgun');
-        let player_wepeon_firepoint : cc.Node = player_weapon.getChildByName('firepoint');
-        let firepoint_world_position :cc.Vec2 = player_weapon.convertToWorldSpaceAR(player_wepeon_firepoint.getPosition());
-        let firepoint_player_position : cc.Vec2 = this.node.convertToNodeSpaceAR(firepoint_world_position);
-        
-        let angle :number = player_weapon.angle;
-
-        let bullet_position : cc.Vec2 = firepoint_player_position;
-        const new_bullet : cc.Node = cc.instantiate(this.normal_bullet);
-        //console.log(player_weapon.angle, firepoint_player_position.x, firepoint_player_position.y, bullet_position.x, bullet_position.y);
-        //new_bullet.setPosition(bullet_position.x * 0.6, bullet_position.y * 0.6);
-        new_bullet.angle = angle;
-        const bullet_body : cc.RigidBody = new_bullet.getComponent(cc.RigidBody);
-        bullet_body.linearVelocity = cc.v2(MathUtilities.sind(-(new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
-                                            MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);	
-        if(this.getPlayerFaceDirection() === "right"){
-            bullet_body.linearVelocity = cc.v2(MathUtilities.sind(-(new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
-                                            MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);
-            new_bullet.setPosition(bullet_position.x * 0.6, bullet_position.y * 0.6);            
-        }else{
-            new_bullet.setPosition(bullet_position.x * 1.3, bullet_position.y * 1.3);
-            //new_bullet.scaleX *= -1.0;
-            bullet_body.linearVelocity = cc.v2(MathUtilities.sind((new_bullet.angle+270)) * new_bullet.getComponent('normal_bullet').bullet_speed, 
-                                            MathUtilities.cosd(new_bullet.angle+270) * new_bullet.getComponent('normal_bullet').bullet_speed);	
-        }
-        this.node.addChild(new_bullet);
-        this.createMuzzleflash(firepoint_player_position, new_bullet.angle);
-
-    }
-
-    createMuzzleflash(flash_position : cc.Vec2, flash_angel : number){
-        const new_flash : cc.Node = cc.instantiate(this.muzzle_flash);
-        new_flash.setPosition(flash_position.x * 1.5, flash_position.y * 1.5);
-        new_flash.angle = flash_angel;
-        this.node.addChild(new_flash);
-    }
-
     aimLock(){
         console.log('rotation locked!');
         this.aim_lock = true;
@@ -201,23 +133,34 @@ export default class player extends cc.Component {
         return this.auto_aim;
     }
     playerShoot(){
-        this.castSpell();
-        //this.creatBullet();
+        console.log(this.aimed_enemy);
+        if(this.aimed_enemy != null){
+            this.castSpell();
+        }else{
+            this.spellTargetNotFound();
+        }
     }
-    lookAtObj(target : cc.Vec2){        
-        let dx : number= target.x - this.node.x;
-        let dy : number = target.y - this.node.y;
-        //console.log(dx, dy);
-        let dir: cc.Vec2 = cc.v2(dx,dy);
-        let angle: number = dir.signAngle(cc.v2(1,0));
-        return angle;
+    castSpell(){        
+        //console.log(this.node.getPosition());
+        const new_spell : cc.Node = cc.instantiate(this.normal_bullet);
+        new_spell.setPosition(this.node.getPosition());
+
+        //set spell angel
+        let angle : number = this.lookAtObj(this.aimed_enemy.getPosition());
+        console.log(angle* 180 / Math.PI);
+        this.flipPlayer(angle* 180 / Math.PI);
+
+        new_spell.getComponent('fireball').aimed_enemy = this.aimed_enemy;
+        if(this.getPlayerFaceDirection() === -1 ){
+            new_spell.angle = 360 - angle * 180 / Math.PI; 
+        }else{
+            new_spell.angle = - angle * 180 / Math.PI; 
+        }
+        this.node.getParent().addChild(new_spell);
     }
-    distanceToObj(target : cc.Vec2){
-        let dx : number= target.x - this.node.x;
-        let dy : number = target.y - this.node.y;
-        let distance : number = Math.sqrt((dx*dx)+(dy*dy));
-        return distance;
-    }
+    spellTargetNotFound(){
+        this.status_text.getComponent('status_text').setText(this.getPlayerFaceDirection(), 'I need a target...');
+    }  
     getClosestEnemy(){
         let enemies : cc.Node[] = this.node.parent.children.filter(function (e){
             return e.name == 'slime';
@@ -233,46 +176,18 @@ export default class player extends cc.Component {
         }, this);
         return closest_enemy;
     }
-    autoAim(){        
-        let closest_enemy : cc.Node = this.getClosestEnemy();
-        //console.log(closest_enemy);
-        let angle: number = 0;
-        let distance: number = 0;
-        if(closest_enemy != null){
-            //check if aimed the same enemy
-            if(closest_enemy.uuid != this.aimed_enemy_uid){
-                //new aim target
-                if(this.aimed_enemy_uid != ''){
-                    //remove old aim
-                    let last_aimed_enemy : cc.Node = this.node.parent.getChildByUuid(this.aimed_enemy_uid);
-                    if(last_aimed_enemy != null){
-                        last_aimed_enemy.getComponent('slime').setAimed(false);
-                    }
-                }
-                //add new aim
-                closest_enemy.getComponent('slime').setAimed(true);
-                this.aimed_enemy_uid = closest_enemy.uuid;
-            }
-            
-            this.aim_lock = true;
-            angle = this.lookAtObj(closest_enemy.getPosition());
-            distance = this.distanceToObj(closest_enemy.getPosition());
-        }else{
-            if(this.aimed_enemy_uid != ''){
-                //remove old aim
-                let last_aimed_enemy : cc.Node = this.node.parent.getChildByUuid(this.aimed_enemy_uid);
-                if(last_aimed_enemy != null){
-                    last_aimed_enemy.getComponent('slime').setAimed(false);
-                }
-            }
-            this.aim_lock = false;
-        }
-        //console.log(angle * 180 / Math.PI, distance);
-        if(this.getPlayerFaceDirection() === 'left'){
-            this.node.getChildByName('handgun').angle = angle * 180 / Math.PI + 180; 
-        }else{
-            this.node.getChildByName('handgun').angle = - angle * 180 / Math.PI; 
-        }
+    lookAtObj(target : cc.Vec2){        
+        let dx : number= target.x - this.node.x;
+        let dy : number = target.y - this.node.y;
+        //console.log(dx, dy);
+        let dir: cc.Vec2 = cc.v2(dx,dy);
+        let angle: number = dir.signAngle(cc.v2(1,0));
+        return angle;
     }
-
+	distanceToObj(target : cc.Vec2){
+        let dx : number= target.x - this.node.x;
+        let dy : number = target.y - this.node.y;
+        let distance : number = Math.sqrt((dx*dx)+(dy*dy));
+        return distance;
+    } 
 }

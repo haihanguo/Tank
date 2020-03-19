@@ -5,4 +5,3 @@
 	export const sind = deg => sin(rad(deg));
 	export const clamp = (val, min, max) => val < min ? min : val > max ? max : val
 	export enum AiStatus {move, attack, idle};
- 

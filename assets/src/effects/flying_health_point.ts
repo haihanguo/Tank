@@ -11,7 +11,8 @@ const {ccclass, property} = cc._decorator;
 export default class flying_health_point extends cc.Component {
 
     onLoad () {
-        
+        console.log('here');
+        this.node.zIndex = 0;
         
         cc.tween(this.node)
             .to(1, { position: cc.v2(this.node.getPosition().x, this.node.getPosition().y+30)})

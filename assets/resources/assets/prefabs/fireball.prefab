@@ -50,7 +50,7 @@
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": -0.2,
+      "x": 0,
       "y": 0.5
     },
     "_trs": {
@@ -134,21 +134,6 @@
     "_id": ""
   },
   {
-    "__type__": "6922a4HUEVATI+g3qxt3rDa",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "damage": 20,
-    "damage_type": 0,
-    "bullet_speed": 300,
-    "bullet_fire_speed": 10,
-    "bullet_count": 10,
-    "_id": ""
-  },
-  {
     "__type__": "cc.CircleCollider",
     "_name": "",
     "_objFlags": 0,
@@ -159,10 +144,22 @@
     "tag": 0,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": 10.5,
+      "x": 8,
       "y": 0
     },
     "_radius": 4.7,
+    "_id": ""
+  },
+  {
+    "__type__": "5eb04W+mmhLH4xYIgpt6lV+",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "damage": 0,
+    "spell_speed": 300,
     "_id": ""
   },
   {

@@ -35,7 +35,7 @@ export default class enemy extends cc.Component {
     flying_health_point = null;
 
     @property(cc.Prefab)
-    gold_drop = null;
+    gold_drop : cc.Prefab = null;
 
     public aimed : boolean = false;
     public on_move : boolean = false;
@@ -44,36 +44,24 @@ export default class enemy extends cc.Component {
     public face_to_target : string = "right";
 
 
-    
+    onCollisionEnter(other, self) {
+        if (other.node.name === "fireball") { 
+            this.health_point -= 20;
+            this.flyHealthPoint(20);
+            other.node.destroy();
+        }
+    }
+
 	onBeginContact(contact, selfCollider, otherCollider) {
         //console.log(otherCollider.node);
 		if (otherCollider.node.name === "fireball") {
             this.health_point -= 20;
             this.flyHealthPoint(20);
 			otherCollider.node.destroy();
-		}else if(otherCollider.node.name === "player" && this.ai_status === MathUtilities.AiStatus.attack){
-            console.log('attacked!');
-            if(otherCollider.node.getComponent("player").shield_point > 50){
-                otherCollider.node.getComponent("player").shield_point -= 50;
-            }else{
-                var attact_point_left :number = 0;
-                attact_point_left = 50 - otherCollider.node.getComponent("player").shield_point;
-                otherCollider.node.getComponent("player").shield_point = 0;
-                otherCollider.node.getComponent("player").health_point -= attact_point_left;
-            }
-            
-            //console.log(otherCollider.node.getPosition().sub(selfCollider.node.getPosition()));
-            let attack_dir = otherCollider.node.getPosition().sub(selfCollider.node.getPosition());
-            //console.log(attack_dir);
-            attack_dir = attack_dir.normalizeSelf();
-            //console.log(attack_dir, attack_dir.mulSelf(-1500));
-            otherCollider.node.getComponent(cc.RigidBody).applyLinearImpulse(cc.v2(attack_dir.x, attack_dir.y), otherCollider.node.convertToWorldSpaceAR(otherCollider.node.getPosition()), true);
-            //console.log(attack_dir);
-            //console.log('col end!');
-        }
+		}
 	}
     onLoad () {
-        this.node.zIndex = 0;
+        this.node.zIndex = -1;
         console.log('add enemy');
         
     }
@@ -110,14 +98,27 @@ export default class enemy extends cc.Component {
         this.setupVerlocity();
         this.playAnimation();
     }
-    attackPlayer(){
+    enemyAttack(){
         this.physicAttackPlayer();
     }
     enemyIdle(){
         this.setupVerlocity(0);
     }
     physicAttackPlayer(){
-        this.setupVerlocity(5);
+        let player : cc.Node = this.node.getParent().getChildByName('player');
+        if(player.getComponent("player").shield_point > 50){
+            player.getComponent("player").shield_point -= 50;
+        }else{
+            var attact_point_left :number = 0;
+            attact_point_left = 50 - player.getComponent("player").shield_point;
+            player.getComponent("player").shield_point = 0;
+            player.getComponent("player").health_point -= attact_point_left;
+        }     
+
+        let attack_dir = player.getPosition().subtract(this.node.getPosition());
+        attack_dir = attack_dir.normalizeSelf();
+        player.getComponent(cc.RigidBody).applyLinearImpulse(cc.v2(attack_dir.x, attack_dir.y), player.convertToWorldSpaceAR(player.getPosition()), true);
+        
     }
     update(dt) {
 
@@ -153,19 +154,20 @@ export default class enemy extends cc.Component {
     }
 
     playAnimation(){
+        //console.log('play!');
         var slime_animation : cc.Animation = this.node.getComponent(cc.Animation);
-        if(this.ai_status == MathUtilities.AiStatus.move){
+        if(this.ai_status === MathUtilities.AiStatus.move){
             if(slime_animation.getAnimationState('slime_move').isPlaying === false){
                 slime_animation.play('slime_move')
             }
-        }else if(this.ai_status == MathUtilities.AiStatus.idle){
+        }else if(this.ai_status === MathUtilities.AiStatus.idle){
             if(slime_animation.getAnimationState('slime_idle').isPlaying === false){
                 slime_animation.play('slime_idle')
             }
-        }else if(this.ai_status == MathUtilities.AiStatus.attack){
-            //if(slime_animation.getAnimationState('slime_attack').isPlaying === false){
-            //    slime_animation.play('slime_attack')
-            //}
+        }else if(this.ai_status === MathUtilities.AiStatus.attack){
+            if(slime_animation.getAnimationState('slime_attack').isPlaying === false){
+                slime_animation.play('slime_attack')
+            }
         }
     }
 
@@ -189,10 +191,13 @@ export default class enemy extends cc.Component {
     addAimed(){        
         const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
         this.node.addChild(aim_icon);
-        console.log(this.node);
+        
+        this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = this.node;
+        console.log(this.node, this.node.uuid, this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy);
     }
     removeAimed(){
         this.node.getChildByName('aimed').destroy();
+        this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
     }
     setAimed(playerAim : boolean){
         if(playerAim){
@@ -212,12 +217,18 @@ export default class enemy extends cc.Component {
             if(aimed_enemy[0].uuid === this.node.uuid){
                 this.removeAimed();
             }else{
-                this.addAimed();
                 aimed_enemy[0].getComponent('enemy').removeAimed();
+                this.addAimed();                
             }
         }else{
             this.addAimed();
         }
         
+    }
+
+    onDestroy(){
+        if(this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy === this.node){
+            this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
+        }
     }
 }

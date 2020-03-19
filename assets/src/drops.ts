@@ -13,11 +13,11 @@ export default class drops extends cc.Component {
     @property({type:cc.AudioClip})
     pickup_sound : cc.AudioClip = null;
 
-    private drop_type : string = null;
-    private drop_amount : number = null;
+    public drop_type : string = null;
+    public drop_amount : number = null;
 
     onLoad(){
-        this.node.zIndex = -1;
+        this.node.zIndex = -2;
         this.setDropSprite();
     }
     start () {

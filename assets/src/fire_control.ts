@@ -35,7 +35,7 @@ export default class fire_control extends cc.Component {
         console.log('firecontrol setup!');
         this.dir = cc.v2(0,100);
         this.fire_button.on(cc.Node.EventType.TOUCH_START, this.on_aim_pressed, this);
-        this.fire_button.on(cc.Node.EventType.TOUCH_MOVE, this.on_aim_moved, this);
+        //this.fire_button.on(cc.Node.EventType.TOUCH_MOVE, this.on_aim_moved, this);
         this.fire_button.on(cc.Node.EventType.TOUCH_END, this.on_aim_canceled, this);
         this.fire_button.on(cc.Node.EventType.TOUCH_CANCEL, this.on_aim_canceled, this);
     }
@@ -49,8 +49,8 @@ export default class fire_control extends cc.Component {
         console.log('on_aim_pressed');
         //this.player.getComponent('player').playerShoot();
         this.pressed_time = 0;
-        //this.node.scaleX = 1.05;
-        //this.node.scaleY = 1.05;
+        this.node.scaleX = 1.05;
+        this.node.scaleY = 1.05;
         this.fire_button_pressed = true;
     }
     on_aim_moved(e: cc.Touch): void{
@@ -89,16 +89,17 @@ export default class fire_control extends cc.Component {
     on_aim_canceled(): void{
         //this.player.getComponent('player').aimUnlock();
         //this.dir = cc.v2(0,0);
-        this.fire_button.setPosition(cc.v2(0,0));
+        //this.fire_button.setPosition(cc.v2(0,0));
         console.log('on_aim_canceled');
         this.fire_button_pressed = false;
+        this.player.getComponent('player').move_lock = false;
         this.node.scaleX = 1;
         this.node.scaleY = 1;
         this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = 0;
     }
     update (dt) {
         if(this.fire_button_pressed){
-            //console.log(this.node.getChildByName('fire_background_fill'));
+            this.player.getComponent('player').move_lock = true;
             this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = this.pressed_time/0.5;
             this.pressed_time +=dt;
             //console.log(this.pressed_time);
