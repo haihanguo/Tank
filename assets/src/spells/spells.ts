@@ -14,11 +14,13 @@ export default class spells extends cc.Component {
     
     time_alive = 0
 
-    @property
-    damage : number = 0;
+    
+    
 
-    @property
-    spell_speed : number = 0;
+    public spell_damage : number = 0;
+    public spell_casting_time : number = 0;
+    public spell_costs_mana : number = 0;
+    public spell_cooldown : number = 0;
     
     public aimed_enemy : cc.Node = null;
     public aimed_angel : number = 0;

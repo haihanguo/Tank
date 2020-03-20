@@ -5,8 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import joystick from "./../joystick"
-import fire_control from "./../fire_control"
+import joystick from "../UI/joystick"
+import fire_control from "../UI/fire_control"
 import * as MathUtilities from './../MathUtilities'
 
 const {ccclass, property} = cc._decorator;
@@ -32,6 +32,10 @@ export default class player extends cc.Component {
     aim_control: fire_control = null;
 
     @property(cc.Node)
+    number_ui : cc.Node = null;
+    
+
+    @property(cc.Node)
     health_bar: cc.Node = null;
 
 
@@ -55,6 +59,8 @@ export default class player extends cc.Component {
     public aimed_enemy : cc.Node = null;
     public move_lock : boolean = false;
 
+    public gold_amount :number = 0;
+    public exp_amount : number = 0;
 
     onLoad () {
         this.node.zIndex = 0;
@@ -70,18 +76,23 @@ export default class player extends cc.Component {
     }
     onCollisionEnter(other, self) {
         if (other.node.name === "gold") { 
+            this.gold_amount += other.node.getComponent("drops").drop_amount;
+            other.node.getComponent("drops").picked = true;
+            this.updateGoldAmount();
             other.node.destroy();
         }
     }
     update (dt) {
-        //this.flipPlayer();
-        this.movePlayer();      
+        this.movePlayer();     
     }
 
     movePlayer(){        
         if(this.camera != null){
             this.camera.setPosition(this.node.x + this.offset.x, this.node.y + this.offset.y);
         }
+
+        this.flipPlayer();
+
         if(this.move_lock){
             this.body.linearVelocity = cc.v2(0,0);
             return;
@@ -90,6 +101,7 @@ export default class player extends cc.Component {
         let vy: number = this.speed * this.stick.dir.y;
         this.body.linearVelocity = cc.v2(vx, vy);
 
+        
         if(this.stick.dir.x === 0 && this.stick.dir.y === 0){
             this.body.linearVelocity = cc.v2(0,0);
             return;
@@ -108,7 +120,15 @@ export default class player extends cc.Component {
         this.degree = r * 180 / Math.PI;
 
         if(player_angel == null){
-
+            if(this.body.linearVelocity.x > 0){
+                if(this.node.scaleX < 0){
+                    this.node.scaleX *= -1.0;
+                }
+            }else if(this.body.linearVelocity.x < 0){
+                if(this.node.scaleX > 0){
+                    this.node.scaleX *= -1.0;
+                }
+            }
         }else{
             if(player_angel < 90 && player_angel > -90){
                 if(this.node.scaleX < 0){
@@ -144,11 +164,11 @@ export default class player extends cc.Component {
         //console.log(this.node.getPosition());
         const new_spell : cc.Node = cc.instantiate(this.normal_bullet);
         new_spell.setPosition(this.node.getPosition());
-
+        
         //set spell angel
         let angle : number = this.lookAtObj(this.aimed_enemy.getPosition());
         console.log(angle* 180 / Math.PI);
-        this.flipPlayer(angle* 180 / Math.PI);
+        this.flipPlayer(angle * 180 / Math.PI);
 
         new_spell.getComponent('fireball').aimed_enemy = this.aimed_enemy;
         if(this.getPlayerFaceDirection() === -1 ){
@@ -175,6 +195,12 @@ export default class player extends cc.Component {
             }
         }, this);
         return closest_enemy;
+    }
+    updateGoldAmount(){
+        this.number_ui.getChildByName('gold').getComponent(cc.Label).string = "Gold: "+this.gold_amount;
+    }
+    updateExpAmount(){
+        this.number_ui.getChildByName('exp').getComponent(cc.Label).string = "Exp: "+this.exp_amount;
     }
     lookAtObj(target : cc.Vec2){        
         let dx : number= target.x - this.node.x;

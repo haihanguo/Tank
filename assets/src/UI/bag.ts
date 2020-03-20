@@ -5,24 +5,27 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import spells from "./spells";
-
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class fireball extends spells {
+export default class NewClass extends cc.Component {
 
-
-    onLoad() {
-        this.spell_damage = 20;
-        this.spell_casting_time = 1.5;
-
+    // LIFE-CYCLE CALLBACKS:
+    private isActive : boolean = false;
+    onLoad () {
+        this.node.active = false;
     }
+
     start () {
-        var fly_to_position = this.aimed_enemy.getPosition();
-        //console.log(fly_to_position, this.aimed_angel);        
-        this.node.runAction(cc.moveTo(0.3, fly_to_position, 0));
+
     }
 
-    update (dt) {}
+    openCloseBag(){
+        if(this.node.active){
+            this.node.active = false;
+        }else{
+            this.node.active = true;
+        }
+    }
+    // update (dt) {}
 }

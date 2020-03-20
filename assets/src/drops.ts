@@ -9,12 +9,17 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class drops extends cc.Component {
+    
+    time_to_ive = 15000
+    
+    time_alive = 0
 
     @property({type:cc.AudioClip})
     pickup_sound : cc.AudioClip = null;
 
     public drop_type : string = null;
     public drop_amount : number = null;
+    public picked : boolean = false;
 
     onLoad(){
         this.node.zIndex = -2;
@@ -24,8 +29,9 @@ export default class drops extends cc.Component {
         
     }
     onDestroy(){
-        console.log('picked');
-        cc.audioEngine.playEffect(this.pickup_sound, false);
+        if(this.picked){
+            cc.audioEngine.playEffect(this.pickup_sound, false);
+        }        
     }
 
     setDropDetails(drop_type : string, drop_amount? : number){
@@ -55,5 +61,9 @@ export default class drops extends cc.Component {
              
         });
     }
-    // update (dt) {}
+    update (dt) {
+        if (!cc.isValid(this.node)) return
+        this.time_alive += dt * 1000
+        if (this.time_alive >= this.time_to_ive) this.node.destroy()
+    }
 }

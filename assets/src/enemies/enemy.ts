@@ -7,6 +7,8 @@
 
 const {ccclass, property} = cc._decorator;
 import * as MathUtilities from './../MathUtilities'
+import MathHelpers from './../MathUtilities'
+
 //enum AiStatus {move, attack, idle};
 @ccclass
 export default class enemy extends cc.Component {
@@ -43,6 +45,10 @@ export default class enemy extends cc.Component {
     public time : number = null;
     public face_to_target : string = "right";
 
+    public gold_drop_amount :  number = 0;
+
+    public alart_distance : number = 0;
+    public attack_distance : number = 0;
 
     onCollisionEnter(other, self) {
         if (other.node.name === "fireball") { 
@@ -51,28 +57,18 @@ export default class enemy extends cc.Component {
             other.node.destroy();
         }
     }
-
-	onBeginContact(contact, selfCollider, otherCollider) {
-        //console.log(otherCollider.node);
-		if (otherCollider.node.name === "fireball") {
-            this.health_point -= 20;
-            this.flyHealthPoint(20);
-			otherCollider.node.destroy();
-		}
-	}
     onLoad () {
         this.node.zIndex = -1;
+        
         console.log('add enemy');
         
     }
     attachTouchEvent(){
         this.node.on(cc.Node.EventType.TOUCH_START, this.changeAimedStatus, this);
     }
-
     start () {
-
+        
     }
-
     setupVerlocity(speed_scale? : number){
         if(speed_scale == null){
             speed_scale = 1;
@@ -82,7 +78,6 @@ export default class enemy extends cc.Component {
         var body : cc.RigidBody = this.node.getComponent(cc.RigidBody)
         body.linearVelocity = cc.v2(Math.cos(target_dir) * this.speed * speed_scale, Math.sin(-target_dir) *  this.speed * speed_scale);
     }
-
     faceToTargetFaceDirection(){
         if(this.face_to_target == "left"){
             if(this.node.scaleX < 0){
@@ -123,15 +118,12 @@ export default class enemy extends cc.Component {
     update(dt) {
 
     }
-
     flyHealthPoint(show_number : number){
         let flying_health_point : cc.Node = cc.instantiate(this.flying_health_point);        
         flying_health_point.getComponent(cc.Label).string = "-" + show_number;
         flying_health_point.setPosition(this.node.getPosition());
         this.node.parent.addChild(flying_health_point);        
     }
-
-
     lookAtObj(target : cc.Vec2){        
         var dx : number= target.x - this.node.x;
         var dy : number = target.y - this.node.y;
@@ -152,7 +144,6 @@ export default class enemy extends cc.Component {
         var distance : number = Math.sqrt((dx*dx)+(dy*dy));
         return distance;
     }
-
     playAnimation(){
         //console.log('play!');
         var slime_animation : cc.Animation = this.node.getComponent(cc.Animation);
@@ -170,7 +161,6 @@ export default class enemy extends cc.Component {
             }
         }
     }
-
     checkHealthPoint(){
         if (this.health_point <= 0){
             const dead_effect : cc.Node = cc.instantiate(this.dead_effect);
@@ -178,7 +168,7 @@ export default class enemy extends cc.Component {
             this.node.parent.addChild(dead_effect);
 
             const gold_drop : cc.Node = cc.instantiate(this.gold_drop);
-            gold_drop.getComponent('drops').setDropDetails('gold', 2000);
+            gold_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
             gold_drop.setPosition(this.node.getPosition());
             this.node.parent.addChild(gold_drop);
 
@@ -225,10 +215,11 @@ export default class enemy extends cc.Component {
         }
         
     }
-
     onDestroy(){
         if(this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy === this.node){
             this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
         }
+        this.node.getParent().getChildByName('player').getComponent('player').exp_amount += 10;
+        this.node.getParent().getChildByName('player').getComponent('player').updateExpAmount();
     }
 }
