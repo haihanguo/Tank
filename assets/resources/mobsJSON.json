@@ -1,0 +1,24 @@
+[
+	{
+		"id":101,
+        "name":"slime",
+        "hp":25,
+        "atkmin": 1,
+        "atkmax": 2,
+        "def": 1,
+        "exp": 5,        
+        "speed": 300,
+        "attackgap": 3000        
+    },
+    {
+		"id":102,
+        "name":"orc",
+        "hp":45,
+        "atkmin": 1,
+        "atkmax": 3,
+        "def": 2,
+        "exp": 8,        
+        "speed": 300,
+        "attackgap": 3000        
+    }
+]

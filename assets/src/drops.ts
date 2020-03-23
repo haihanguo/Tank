@@ -53,12 +53,10 @@ export default class drops extends cc.Component {
             }
         }
         sprite_path = "assets/images/drops/golds/gold_"+gold_amount;
-        var image = cc.url.raw("resources/texture/game/newsprite.png");
         
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
             console.log(self, spriteFrame);
             self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
-             
         });
     }
     update (dt) {

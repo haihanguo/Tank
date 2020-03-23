@@ -15,29 +15,18 @@ export default class enemy extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
     // Collider callbacks
-    @property
-    health_point :number = 0;
-
-    @property
-    speed : number = 0;
-
-    @property
-    attack_gap : number = 0;
 
     @property(cc.Prefab)
     aim_effect: cc.Prefab = null;
-
     @property(cc.Prefab)
     prepare_attack_effect: cc.Prefab = null;
-
     @property(cc.Prefab)
     dead_effect: cc.Prefab = null;
-
     @property(cc.Prefab)
     flying_health_point = null;
-
     @property(cc.Prefab)
-    gold_drop : cc.Prefab = null;
+    item_drop : cc.Prefab = null;
+
 
     public aimed : boolean = false;
     public on_move : boolean = false;
@@ -47,9 +36,15 @@ export default class enemy extends cc.Component {
 
     public gold_drop_amount :  number = 0;
 
+    public health_point :number = 0;
+    public speed : number = 0;
+    public attack_gap : number = 0;
     public alart_distance : number = 0;
     public attack_distance : number = 0;
+    public mobs_level : number = 0;
 
+    public droplist;
+    
     onCollisionEnter(other, self) {
         if (other.node.name === "fireball") { 
             this.health_point -= 20;
@@ -58,8 +53,7 @@ export default class enemy extends cc.Component {
         }
     }
     onLoad () {
-        this.node.zIndex = -1;
-        
+        this.node.zIndex = -1;        
         console.log('add enemy');
         
     }
@@ -138,12 +132,6 @@ export default class enemy extends cc.Component {
         var angle: number = dir.signAngle(cc.v2(1,0));
         return angle;
     }
-    distanceToObj(target : cc.Vec2){
-        var dx : number= target.x - this.node.x;
-        var dy : number = target.y - this.node.y;
-        var distance : number = Math.sqrt((dx*dx)+(dy*dy));
-        return distance;
-    }
     playAnimation(){
         //console.log('play!');
         var slime_animation : cc.Animation = this.node.getComponent(cc.Animation);
@@ -167,16 +155,19 @@ export default class enemy extends cc.Component {
             dead_effect.setPosition(this.node.getPosition());
             this.node.parent.addChild(dead_effect);
 
-            const gold_drop : cc.Node = cc.instantiate(this.gold_drop);
-            gold_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
-            gold_drop.setPosition(this.node.getPosition());
-            this.node.parent.addChild(gold_drop);
+            const item_drop : cc.Node = cc.instantiate(this.item_drop);
+            item_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
+            item_drop.setPosition(this.node.getPosition());
+            this.node.parent.addChild(item_drop);
 
 
             this.node.destroy()
         }else{
             return;
         } 
+    }
+    getDropDetails(){
+
     }
     addAimed(){        
         const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
