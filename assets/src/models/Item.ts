@@ -31,11 +31,12 @@
         public  DefenceMin : number; 
         public  DefenceMax : number;
         public  Speed : number;
+        public  Level : number;
         public  Luck : number;
 
         constructor(Id: number, Name: string, Description: string, Capacity: number, ItemType: number, Price: number, IconPath: string, 
             EquipType: number, PhysicAttackMin : number, PhysicAttackMax : number, MagicAttackMin : number, MagicAttackMax : number, 
-            DefenceMin : number, DefenceMax : number, Speed : number,Luck : number) { 
+            DefenceMin : number, DefenceMax : number, Speed : number,Level : number, Luck : number) { 
             super(Id, Name, Description, Capacity, ItemType, Price, IconPath);
             this.EquipType = EquipType;
             this.PhysicAttackMin = PhysicAttackMin;
@@ -45,6 +46,7 @@
             this.DefenceMin = DefenceMin;
             this.DefenceMax = DefenceMax;
             this.Speed = Speed;
+            this.Level = Level;
             this.Luck =Luck;
         }
     }

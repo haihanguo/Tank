@@ -3980,6 +3980,9 @@
     "mobs_Json_file": {
       "__uuid__": "3e903ad8-1e54-444e-b786-7761a5433352"
     },
+    "drops_Json_file": {
+      "__uuid__": "75c7ca5b-b7b8-406c-9c29-3eb2a11a2ddb"
+    },
     "_id": "b62T96am1O9Jj84RPZJ50J"
   }
 ]

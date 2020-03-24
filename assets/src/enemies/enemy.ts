@@ -8,6 +8,7 @@
 const {ccclass, property} = cc._decorator;
 import * as MathUtilities from './../MathUtilities'
 import MathHelpers from './../MathUtilities'
+import { Drop } from '../models/Drop';
 
 //enum AiStatus {move, attack, idle};
 @ccclass
@@ -19,15 +20,13 @@ export default class enemy extends cc.Component {
     @property(cc.Prefab)
     aim_effect: cc.Prefab = null;
     @property(cc.Prefab)
-    prepare_attack_effect: cc.Prefab = null;
-    @property(cc.Prefab)
     dead_effect: cc.Prefab = null;
     @property(cc.Prefab)
     flying_health_point = null;
     @property(cc.Prefab)
     item_drop : cc.Prefab = null;
 
-
+    private basepath : string = 'assets/images/items/';
     public aimed : boolean = false;
     public on_move : boolean = false;
     public ai_status : MathUtilities.AiStatus = null;
@@ -43,7 +42,8 @@ export default class enemy extends cc.Component {
     public attack_distance : number = 0;
     public mobs_level : number = 0;
 
-    public droplist;
+    public drop_chance : Drop;
+    public drop_list;
     
     onCollisionEnter(other, self) {
         if (other.node.name === "fireball") { 
@@ -155,10 +155,10 @@ export default class enemy extends cc.Component {
             dead_effect.setPosition(this.node.getPosition());
             this.node.parent.addChild(dead_effect);
 
-            const item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
-            item_drop.setPosition(this.node.getPosition());
-            this.node.parent.addChild(item_drop);
+            //const item_drop : cc.Node = cc.instantiate(this.item_drop);
+            //item_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
+            //item_drop.setPosition(this.node.getPosition());
+            //this.node.parent.addChild(item_drop);
 
 
             this.node.destroy()
@@ -206,11 +206,93 @@ export default class enemy extends cc.Component {
         }
         
     }
+
+    getGoldDrop(chance : Drop) {
+
+        let base_gold = 10;
+        let gold_1 = (this.mobs_level + base_gold) * 10;
+        let gold_2 = (this.mobs_level + base_gold) * 20;
+        let gold_3 = (this.mobs_level + base_gold) * 40;
+
+        let total_weight :number = chance.GoldP1 + chance.GoldP2 + chance.GoldP3;
+        let weight_result :number= MathHelpers.getRandomInt(total_weight);
+        let gold_drop :number = 0;
+        if(weight_result <= chance.GoldP1){
+            gold_drop = MathHelpers.getRandomInt(gold_1);
+        }else if( weight_result > chance.GoldP1 && weight_result < (chance.GoldP1 + chance.GoldP2)){
+            gold_drop = MathHelpers.getRandomInt(gold_2);
+        }else{
+            gold_drop = MathHelpers.getRandomInt(gold_3);
+        }
+        let goldname :string = '';
+        if(gold_drop < 100){
+            goldname = 'golds/coin_01d';
+        }else if(gold_drop < 200){
+            goldname = 'golds/coin_02d';
+        }else if(gold_drop < 400){
+            goldname = 'golds/coin_03d';
+        }else if(gold_drop < 700){
+            goldname = 'golds/coin_04d';
+        }else if(gold_drop < 1500){
+            goldname = 'golds/coin_05d';
+        }
+        
+        let item_drop : cc.Node = cc.instantiate(this.item_drop);
+        item_drop.getComponent('drops').setGoldDropDetails(this.basepath+goldname, gold_drop+1);
+        return item_drop;
+    }
+
+    getConsumDrop(chance : Drop) {
+
+        let result = new Array();
+
+        let base_amount = 1;
+        let amount_1 = base_amount;
+        let amount_2 = (base_amount+1)*2;
+        let amount_3 = (base_amount+2)*2;
+
+        let total_weight :number = chance.ConsumP1 + chance.ConsumP2 + chance.ConsumP3;
+        let weight_result :number= MathHelpers.getRandomInt(total_weight);
+        let amount_drop :number = 0;
+        if(weight_result <= chance.ConsumP1){
+            amount_drop = MathHelpers.getRandomInt(amount_1);
+        }else if( weight_result > chance.ConsumP1 && weight_result < (chance.ConsumP1 + chance.ConsumP2)){
+            amount_drop = MathHelpers.getRandomInt(amount_2);
+        }else{
+            amount_drop = MathHelpers.getRandomInt(amount_3);
+        }
+
+        //random different consume type
+        let hp_drop = MathHelpers.getRandomInt(amount_drop);
+        let mp_drop = amount_drop - hp_drop;
+
+        for(let i = 0; i < hp_drop; i++){
+            let item_drop : cc.Node = cc.instantiate(this.item_drop);
+            item_drop.getComponent('drops').setDropDetails(101);
+            result.push(item_drop);
+        }
+        for(let i = 0; i < mp_drop; i++){
+            let item_drop : cc.Node = cc.instantiate(this.item_drop);
+            item_drop.getComponent('drops').setDropDetails(104);
+            result.push(item_drop);
+        }
+        return result;
+    }
+
     onDestroy(){
         if(this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy === this.node){
             this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
         }
         this.node.getParent().getChildByName('player').getComponent('player').exp_amount += 10;
         this.node.getParent().getChildByName('player').getComponent('player').updateExpAmount();
+        this.dropItem();
+    }
+
+    dropItem(){
+        this.drop_list.forEach(element => {
+            element.setPosition(this.node.getPosition());
+            this.node.getParent().addChild(element);
+        });
+        
     }
 }

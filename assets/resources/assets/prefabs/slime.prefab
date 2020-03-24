@@ -16,13 +16,15 @@
     "_name": "slime",
     "_objFlags": 0,
     "_parent": null,
-    "_children": [
-      {
-        "__id__": 2
-      }
-    ],
+    "_children": [],
     "_active": true,
     "_components": [
+      {
+        "__id__": 2
+      },
+      {
+        "__id__": 3
+      },
       {
         "__id__": 4
       },
@@ -34,16 +36,10 @@
       },
       {
         "__id__": 7
-      },
-      {
-        "__id__": 8
-      },
-      {
-        "__id__": 9
       }
     ],
     "_prefab": {
-      "__id__": 10
+      "__id__": 8
     },
     "_opacity": 255,
     "_color": {
@@ -91,77 +87,6 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "_id": ""
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "exclamation_point",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [],
-    "_prefab": {
-      "__id__": 3
-    },
-    "_opacity": 255,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_contentSize": {
-      "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
-    },
-    "_anchorPoint": {
-      "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
-    },
-    "_trs": {
-      "__type__": "TypedArray",
-      "ctor": "Float64Array",
-      "array": [
-        -17.796,
-        23.337,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0.5,
-        0.5,
-        1
-      ]
-    },
-    "_eulerAngles": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_skewX": 0,
-    "_skewY": 0,
-    "_is3DNode": false,
-    "_groupIndex": 0,
-    "groupIndex": 0,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PrefabInfo",
-    "root": {
-      "__id__": 1
-    },
-    "asset": {
-      "__uuid__": "468c5742-5049-4ac0-8c8e-8eda95150672"
-    },
-    "fileId": "81ywiQor9Dn7tlIergycQ3",
-    "sync": false
   },
   {
     "__type__": "cc.Sprite",
@@ -275,14 +200,8 @@
       "__id__": 1
     },
     "_enabled": true,
-    "health_point": 100,
-    "speed": 50,
-    "attack_gap": 5,
     "aim_effect": {
       "__uuid__": "80eb87e5-a0f8-4691-9246-851c3f00c4e7"
-    },
-    "prepare_attack_effect": {
-      "__uuid__": "cc4e867e-d4ab-4143-a03b-70992c5351e8"
     },
     "dead_effect": {
       "__uuid__": "9c27b285-d47e-4172-afbe-84e4b4eb11ad"
@@ -290,7 +209,7 @@
     "flying_health_point": {
       "__uuid__": "5a54b7bf-4ab3-4187-9c95-118da133d299"
     },
-    "gold_drop": {
+    "item_drop": {
       "__uuid__": "e1189f28-ae81-459b-964a-38b8a909a438"
     },
     "_id": ""

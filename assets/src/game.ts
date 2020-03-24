@@ -7,7 +7,8 @@
 
 import * as MathUtilities from './MathUtilities'
 import {Item, ItemType, ItemEquip, ItemConsumable, EquipType} from './models/Item'
-import {Mob} from './models/Mobs'
+import {Mob} from './models/Mob'
+import {Drop} from './models/Drop'
 
 const {ccclass, property} = cc._decorator;
 
@@ -33,14 +34,19 @@ export default class game extends cc.Component {
     @property(cc.JsonAsset)
     mobs_Json_file : cc.JsonAsset = null;
 
+    @property(cc.JsonAsset)
+    drops_Json_file : cc.JsonAsset = null;
+
     private item_list;
     private mob_list;
+    private drop_list;
     // LIFE-CYCLE CALLBACKS:
     onLoad () {
         this.node.zIndex = -5;
         this.iniItemList();
         this.iniMobList();
-        console.log(this.item_list, this.mob_list);
+        this.iniDropList();
+        console.log(this.item_list, this.mob_list, this.drop_list);
     }
 
     start () {
@@ -71,8 +77,8 @@ export default class game extends cc.Component {
         let enemies : cc.Node[] = this.node.children.filter(function (e){
             return e.name == 'slime';
         });
-        if(enemies.length < 10){
-            //this.create_enemy();
+        if(enemies.length < 1){
+            this.create_enemy();
             //this.create_enemy();
         }
         //this.player.getComponent('player').flipPlayer();
@@ -99,9 +105,10 @@ export default class game extends cc.Component {
                     let defmin : number = json_item.defmin;
                     let defmax : number = json_item.defmax;
                     let speed : number = json_item.speed;
+                    let level : number = json_item.level;
                     let luck : number = json_item.luck;
 
-                    item = new ItemEquip(id, name, desc, capacity, parseInt(type), price, icon_path, equiptype, phyatkmin,phyatkmax, magatkmin,magatkmax, defmin,defmax, speed, luck);
+                    item = new ItemEquip(id, name, desc, capacity, parseInt(type), price, icon_path, equiptype, phyatkmin,phyatkmax, magatkmin,magatkmax, defmin,defmax, speed,level, luck);
                     this.item_list.push(item);
                 }else if(type === ItemType.Consumable.toString()){
                     let hp :number = json_item.hp;
@@ -113,9 +120,16 @@ export default class game extends cc.Component {
                 }
             }
     }
-    getItem(item_id : number){
+    getItemByID(item_id : number){
         for(let item of this.item_list){
             if(item.Id === item_id){
+                return item;
+            }
+        }
+    }
+    getItemByName(item_name : string){
+        for(let item of this.item_list){
+            if(item.Name === item_name){
                 return item;
             }
         }
@@ -142,6 +156,33 @@ export default class game extends cc.Component {
         for(let mob of this.mob_list){
             if(mob.Id === mob_id){
                 return mob;
+            }
+        }
+    }
+    iniDropList(){
+        this.drop_list = new Array;
+            for(let json_item of this.drops_Json_file.json){
+                let id : number = json_item.id;
+                let name: string = json_item.name;
+                let gold_p1: number = json_item.gold_p1;
+                let gold_p2 :number = json_item.gold_p2;
+                let gold_p3: number = json_item.gold_p3;
+                let consumable_p1 : number = json_item.consumable_p1;
+                let consumable_p2 : number = json_item.consumable_p2;
+                let consumable_p3 : number = json_item.consumable_p3;
+                let equip_p1 : number = json_item.equip_p1;
+                let equip_p2 : number = json_item.equip_p2;
+                let equip_p3 : number = json_item.equip_p3;
+
+                let drop : Drop = null;
+                drop = new Drop(id, name, gold_p1, gold_p2, gold_p3, consumable_p1, consumable_p2, consumable_p3, equip_p1, equip_p2, equip_p3);
+                this.drop_list.push(drop);
+            }
+    }
+    getDrop(name : string){
+        for(let drop of this.drop_list){
+            if(drop.Name === name){
+                return drop;
             }
         }
     }

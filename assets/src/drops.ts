@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import { ItemEquip, ItemConsumable, Item, ItemType } from "./models/Item";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -23,7 +25,7 @@ export default class drops extends cc.Component {
 
     onLoad(){
         this.node.zIndex = -2;
-        this.setDropSprite();
+        //this.setDropSprite();
     }
     start () {
         
@@ -34,29 +36,32 @@ export default class drops extends cc.Component {
         }        
     }
 
-    setDropDetails(drop_type : string, drop_amount? : number){
-        this.drop_type = drop_type;
-        this.drop_amount = drop_amount;
+    setGoldDropDetails(iconpath : string, goldamount : number){
+        let sprite_path : string = '';
+        this.drop_type = 'gold';
+        this.drop_amount = goldamount;
+
+        let self : cc.Node = this.node;        
+        sprite_path = iconpath;        
+        cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
+            console.log(self, spriteFrame, sprite_path);
+            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;;
+        });
     }
 
-    setDropSprite(){
-        let gold_amount :string = '';
+    setItemDropDetails(drop : Item){
+        //this.drop_type = drop.ItemType;
+        this.setItemDropSprite(drop);
+    }
+
+    setItemDropSprite(drop : Item){
+        debugger
         let sprite_path : string = '';
-        let self : cc.Node = this.node;
-        if(this.drop_type === "gold"){
-            if(this.drop_amount < 1000){
-                gold_amount = 'small';
-            }else if(this.drop_amount < 3000){
-                gold_amount = 'mid';
-            }else{
-                gold_amount = 'large';
-            }
-        }
-        sprite_path = "assets/images/drops/golds/gold_"+gold_amount;
-        
+        let self : cc.Node = this.node;        
+        sprite_path = drop.IconPath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            console.log(self, spriteFrame);
-            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
+            console.log(self, spriteFrame, sprite_path);
+            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(spriteFrame);;
         });
     }
     update (dt) {

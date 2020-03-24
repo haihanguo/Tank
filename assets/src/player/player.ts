@@ -75,11 +75,14 @@ export default class player extends cc.Component {
         
     }
     onCollisionEnter(other, self) {
-        if (other.node.name === "gold") { 
-            this.gold_amount += other.node.getComponent("drops").drop_amount;
-            other.node.getComponent("drops").picked = true;
-            this.updateGoldAmount();
-            other.node.destroy();
+        if (other.node.name === "dropitem"){
+            let item = other.node.getComponent("drops");
+            if(item.drop_type === "gold"){
+                this.gold_amount += other.node.getComponent("drops").drop_amount;
+                other.node.getComponent("drops").picked = true;
+                this.updateGoldAmount();
+                other.node.destroy();
+            }            
         }
     }
     update (dt) {

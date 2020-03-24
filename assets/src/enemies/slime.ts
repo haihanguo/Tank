@@ -17,12 +17,31 @@ export default class slime extends enemy {
     public ready_attack : boolean = false;
     onLoad () {
         this.node.zIndex = -1;
-        this.gold_drop_amount = MathHelpers.getGoldDrop(80,150,15,400,5,600);
-        this.attachTouchEvent()
+        this.attachTouchEvent();
+        
+        this.mobs_level = 1;
+        //setup mob properties
+        //this.node.parent.getComponent('game').getItem();
+        this.health_point = 100;
+        this.speed = 50;
+        
+        
         this.ai_status = MathUtilities.AiStatus.idle;
         this.node.getComponent(cc.Animation).play("slime_idle");
         this.alart_distance = 400;
         this.attack_distance = 50;
+
+        //setup drops
+        this.drop_list = new Array();
+
+        this.drop_chance = this.node.parent.getComponent('game').getDrop('normaldrop');
+        this.drop_list.push(this.getGoldDrop(this.drop_chance));
+
+        console.log(this.drop_list);
+
+
+        
+        //this.node.parent.getComponent('game').item_list;
     }
 
     start () {

@@ -1,0 +1,15 @@
+[
+	{
+        "id":"0",
+        "name": "normaldrop",
+        "gold_p1" : 80,
+        "gold_p2" : 18,
+        "gold_p3" : 2,
+        "consumable_p1" : 80,
+        "consumable_p2" : 15,
+        "consumable_p3" : 5,
+        "equip_p1": 98,
+        "equip_p2": 2,
+        "equip_p3": 0
+    }
+]

@@ -1,3 +1,5 @@
+import { Drop } from "./models/Drop";
+
 	const { cos, sin, PI } = Math
 	
 	const rad = deg => deg * PI / 180;
@@ -8,20 +10,6 @@
 
 
 	export default class MathHelpers {
-		
-		static getGoldDrop(weight1:number, val1: number, weight2:number, val2: number, weight3: number, val3: number) {
-			let total_weight :number = weight1 + weight2 + weight3;
-			let weight_result :number= this.getRandomInt(total_weight);
-			let gold_drop :number = 0;
-			if(weight_result <= weight1){
-				gold_drop = this.getRandomInt(val1);
-			}else if( weight_result > weight1 && weight_result < (weight1 + weight2)){
-				gold_drop = this.getRandomInt(val2);
-			}else{
-				gold_drop = this.getRandomInt(val3);
-			}
-			return gold_drop;
-		}
 		static getRandomInt(val: number) {
 			return Math.floor(Math.random() * Math.floor(val));
 		}
