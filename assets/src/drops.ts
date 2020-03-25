@@ -12,7 +12,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class drops extends cc.Component {
     
-    time_to_ive = 15000
+    time_to_ive = 25000
     
     time_alive = 0
 
@@ -37,31 +37,28 @@ export default class drops extends cc.Component {
     }
 
     setGoldDropDetails(iconpath : string, goldamount : number){
-        let sprite_path : string = '';
-        this.drop_type = 'gold';
+        let sprite_path : string = "";
+        this.drop_type = "gold";
         this.drop_amount = goldamount;
 
         let self : cc.Node = this.node;        
         sprite_path = iconpath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            console.log(self, spriteFrame, sprite_path);
-            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;;
+            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });
     }
 
     setItemDropDetails(drop : Item){
-        //this.drop_type = drop.ItemType;
+        this.drop_type = "item";
         this.setItemDropSprite(drop);
     }
 
     setItemDropSprite(drop : Item){
-        debugger
         let sprite_path : string = '';
         let self : cc.Node = this.node;        
         sprite_path = drop.IconPath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            console.log(self, spriteFrame, sprite_path);
-            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(spriteFrame);;
+            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });
     }
     update (dt) {

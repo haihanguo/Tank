@@ -42,6 +42,7 @@ export default class enemy extends cc.Component {
     public attack_distance : number = 0;
     public mobs_level : number = 0;
 
+    public game_node;
     public drop_chance : Drop;
     public drop_list;
     
@@ -243,7 +244,7 @@ export default class enemy extends cc.Component {
     }
 
     getConsumDrop(chance : Drop) {
-
+        
         let result = new Array();
 
         let base_amount = 1;
@@ -261,19 +262,64 @@ export default class enemy extends cc.Component {
         }else{
             amount_drop = MathHelpers.getRandomInt(amount_3);
         }
-
+        //for test
+        amount_drop = 5;
         //random different consume type
         let hp_drop = MathHelpers.getRandomInt(amount_drop);
         let mp_drop = amount_drop - hp_drop;
 
+        
         for(let i = 0; i < hp_drop; i++){
             let item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setDropDetails(101);
+            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(101));
             result.push(item_drop);
         }
         for(let i = 0; i < mp_drop; i++){
             let item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setDropDetails(104);
+            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(104));
+            result.push(item_drop);
+        }
+        return result;
+    }
+
+    getEquipDrop(chance : Drop) {
+        
+        let result = new Array();
+
+        let base_amount = 0;
+        let amount_1 = base_amount;
+        let amount_2 = (base_amount+1)*2;
+        let amount_3 = (base_amount+2)*2;
+
+        let total_weight :number = chance.EquipP1 + chance.EquipP2 + chance.EquipP3;
+        let weight_result :number= MathHelpers.getRandomInt(total_weight);
+        let max_drop :number = 0;
+        if(weight_result <= chance.EquipP1){
+            max_drop = MathHelpers.getRandomInt(amount_1);
+        }else if( weight_result > chance.EquipP1 && weight_result < (chance.EquipP1 + chance.EquipP2)){
+            max_drop = MathHelpers.getRandomInt(amount_2);
+        }else{
+            max_drop = MathHelpers.getRandomInt(amount_3);
+        }
+
+        //random different consume type
+        let amount_drop = MathHelpers.getRandomInt(max_drop);
+
+        //for test
+        amount_drop = 5;
+        for(let i = 0; i < amount_drop; i++){
+            //item type code
+            //2 weapon 3 armor 4 helmet 5 necklace 6 ring
+            //generate random type:
+            let typecode = MathHelpers.getRandomInt(4)+2;
+            //generate random item
+            //we only have 1 now
+            let itemcode = 1;
+            //generate random additional attributes
+            //TODO
+            let itemid = typecode.toString() + "0" + itemcode.toString();
+            let item_drop : cc.Node = cc.instantiate(this.item_drop);
+            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(Number(itemid)));
             result.push(item_drop);
         }
         return result;
@@ -289,10 +335,13 @@ export default class enemy extends cc.Component {
     }
 
     dropItem(){
+        let item_count = 0;
+        let position_x = this.node.getPosition().x;
+        let position_y = this.node.getPosition().y
         this.drop_list.forEach(element => {
-            element.setPosition(this.node.getPosition());
+            element.setPosition(cc.v2(MathUtilities.drop_array[item_count][0]*MathUtilities.drop_space+position_x, MathUtilities.drop_array[item_count][1]*MathUtilities.drop_space+position_y));
             this.node.getParent().addChild(element);
+            item_count++;
         });
-        
     }
 }

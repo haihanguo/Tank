@@ -7,8 +7,15 @@ import { Drop } from "./models/Drop";
 	export const sind = deg => sin(rad(deg));
 	export const clamp = (val, min, max) => val < min ? min : val > max ? max : val
 	export enum AiStatus {move, attack, idle};
-
-
+	export const drop_space = 30;
+	export const drop_array :number[][] = [[0,0], 
+	[1,0],[1,-1], [0,-1], 
+	[-1,-1], [-1,0], [-1,1], 
+	[0,1], [1,1], 
+	[2,1], [2,0], [2,-1], [2,-2], 
+	[1,-2], [0,-2],[-1,-2],[-2,-2],
+	[-2,-1],[-2,0],[-2,1],[-2,2],
+	[-1,2],[0,2],[1,2],[2,2]];
 	export default class MathHelpers {
 		static getRandomInt(val: number) {
 			return Math.floor(Math.random() * Math.floor(val));

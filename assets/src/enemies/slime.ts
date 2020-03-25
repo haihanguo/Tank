@@ -19,6 +19,7 @@ export default class slime extends enemy {
         this.node.zIndex = -1;
         this.attachTouchEvent();
         
+        this.game_node = this.node.parent.getComponent('game');
         this.mobs_level = 1;
         //setup mob properties
         //this.node.parent.getComponent('game').getItem();
@@ -34,9 +35,17 @@ export default class slime extends enemy {
         //setup drops
         this.drop_list = new Array();
 
-        this.drop_chance = this.node.parent.getComponent('game').getDrop('normaldrop');
+        this.drop_chance = this.game_node.getDrop('normaldrop');
         this.drop_list.push(this.getGoldDrop(this.drop_chance));
 
+        let consum_droplist = this.getConsumDrop(this.drop_chance);
+        if(consum_droplist.length > 0){
+            this.drop_list = this.drop_list.concat(consum_droplist);
+        }
+        let equip_droplist = this.getEquipDrop(this.drop_chance);
+        if(equip_droplist.length > 0){
+            this.drop_list = this.drop_list.concat(equip_droplist);
+        }
         console.log(this.drop_list);
 
 

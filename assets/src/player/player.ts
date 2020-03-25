@@ -38,6 +38,10 @@ export default class player extends cc.Component {
     @property(cc.Node)
     health_bar: cc.Node = null;
 
+    @property(cc.Node)
+    bag : cc.Node = null;
+    @property(cc.Prefab)
+    bag_item : cc.Prefab = null;
 
     @property(cc.Prefab)
     normal_bullet: cc.Prefab = null
@@ -82,7 +86,13 @@ export default class player extends cc.Component {
                 other.node.getComponent("drops").picked = true;
                 this.updateGoldAmount();
                 other.node.destroy();
-            }            
+            }else if(item.drop_type ==="item"){
+                let picked_item = cc.instantiate(this.bag_item);
+                picked_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = other.node.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame;
+                this.bag.addChild(picked_item);
+                console.log(this.bag);
+                other.node.destroy();
+            }          
         }
     }
     update (dt) {
