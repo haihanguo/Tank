@@ -11,7 +11,7 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     onLoad () {
-        this.node.zIndex = -3;
+        //this.node.zIndex = -3;
     }
 
     start () {

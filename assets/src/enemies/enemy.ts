@@ -330,7 +330,6 @@ export default class enemy extends cc.Component {
             this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
         }
         this.node.getParent().getChildByName('player').getComponent('player').exp_amount += 10;
-        this.node.getParent().getChildByName('player').getComponent('player').updateExpAmount();
         this.dropItem();
     }
 

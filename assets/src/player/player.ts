@@ -29,11 +29,7 @@ export default class player extends cc.Component {
     stick: joystick = null;
 
     @property(fire_control)
-    aim_control: fire_control = null;
-
-    @property(cc.Node)
-    number_ui : cc.Node = null;
-    
+    aim_control: fire_control = null;    
 
     @property(cc.Node)
     health_bar: cc.Node = null;
@@ -45,8 +41,6 @@ export default class player extends cc.Component {
 
     @property(cc.Prefab)
     normal_bullet: cc.Prefab = null
-    @property(cc.Prefab)
-    muzzle_flash: cc.Prefab = null
 
     @property
     degree: number = 0;    
@@ -89,6 +83,7 @@ export default class player extends cc.Component {
             }else if(item.drop_type ==="item"){
                 let picked_item = cc.instantiate(this.bag_item);
                 picked_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = other.node.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame;
+                picked_item.getChildByName("item_sprite").setScale(2);
                 this.bag.addChild(picked_item);
                 console.log(this.bag);
                 other.node.destroy();
@@ -208,12 +203,6 @@ export default class player extends cc.Component {
             }
         }, this);
         return closest_enemy;
-    }
-    updateGoldAmount(){
-        this.number_ui.getChildByName('gold').getComponent(cc.Label).string = "Gold: "+this.gold_amount;
-    }
-    updateExpAmount(){
-        this.number_ui.getChildByName('exp').getComponent(cc.Label).string = "Exp: "+this.exp_amount;
     }
     lookAtObj(target : cc.Vec2){        
         let dx : number= target.x - this.node.x;
