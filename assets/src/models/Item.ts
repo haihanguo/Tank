@@ -22,7 +22,7 @@
     }
     export class ItemEquip extends Item
     {
-        public EquipType: number;
+        public EquipType: EquipType;
     
         public  PhysicAttackMin : number;
         public  PhysicAttackMax : number;
@@ -35,7 +35,7 @@
         public  Luck : number;
 
         constructor(Id: number, Name: string, Description: string, Capacity: number, ItemType: number, Price: number, IconPath: string, 
-            EquipType: number, PhysicAttackMin : number, PhysicAttackMax : number, MagicAttackMin : number, MagicAttackMax : number, 
+            EquipType: EquipType, PhysicAttackMin : number, PhysicAttackMax : number, MagicAttackMin : number, MagicAttackMax : number, 
             DefenceMin : number, DefenceMax : number, Speed : number,Level : number, Luck : number) { 
             super(Id, Name, Description, Capacity, ItemType, Price, IconPath);
             this.EquipType = EquipType;
@@ -75,11 +75,13 @@
         Consumable
     }
 
-    export enum EquipType
-    {
-        Weapon, 
-        Helmet,   
-        Armor,  
-        Necklace,   
-        Ring,   
-    }
+    export enum EquipType {
+    Weapon = "Weapon",
+    Helmet = "Helmet",
+    Armor = "Armor",
+    Necklace = "Necklace",
+    Ring = "Ring",
+    Belt = "Belt",
+    Shoes = "Shoes",
+    OffHandWeapon = "OffHandWeapon"
+}

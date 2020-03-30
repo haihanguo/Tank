@@ -1,6 +1,6 @@
 {
   "ver": "2.3.4",
-  "uuid": "9aea707d-68e3-4d27-904c-aba87af1c000",
+  "uuid": "f030aac3-edfb-45db-bc70-7774143bae8b",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -13,8 +13,8 @@
   "subMetas": {
     "playerbag": {
       "ver": "1.0.4",
-      "uuid": "8992c62c-52c3-4f9e-ae9e-c6f9599f3cfa",
-      "rawTextureUuid": "9aea707d-68e3-4d27-904c-aba87af1c000",
+      "uuid": "faf78e92-5317-4303-8112-0a4876153eda",
+      "rawTextureUuid": "f030aac3-edfb-45db-bc70-7774143bae8b",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,

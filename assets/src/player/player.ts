@@ -8,6 +8,7 @@
 import joystick from "../UI/joystick"
 import fire_control from "../UI/fire_control"
 import * as MathUtilities from './../MathUtilities'
+import { ItemType } from "../models/Item";
 
 const {ccclass, property} = cc._decorator;
 
@@ -74,20 +75,14 @@ export default class player extends cc.Component {
     }
     onCollisionEnter(other, self) {
         if (other.node.name === "dropitem"){
-            let item = other.node.getComponent("drops");
+            let item = other.node.getComponent("dropitem");
             if(item.drop_type === "gold"){
-                this.gold_amount += other.node.getComponent("drops").drop_amount;
-                other.node.getComponent("drops").picked = true;
-                this.updateGoldAmount();
-                other.node.destroy();
+                this.gold_amount += item.drop_amount;
+                item.picked = true;
             }else if(item.drop_type ==="item"){
-                let picked_item = cc.instantiate(this.bag_item);
-                picked_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = other.node.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame;
-                picked_item.getChildByName("item_sprite").setScale(2);
-                this.bag.addChild(picked_item);
-                console.log(this.bag);
-                other.node.destroy();
-            }          
+                this.bag.getComponent("bagcontrol").addItem(other.node);                
+            }
+            other.node.destroy();        
         }
     }
     update (dt) {

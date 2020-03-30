@@ -239,7 +239,7 @@ export default class enemy extends cc.Component {
         }
         
         let item_drop : cc.Node = cc.instantiate(this.item_drop);
-        item_drop.getComponent('drops').setGoldDropDetails(this.basepath+goldname, gold_drop+1);
+        item_drop.getComponent('dropitem').setGoldDropDetails(this.basepath+goldname, gold_drop+1);
         return item_drop;
     }
 
@@ -271,12 +271,12 @@ export default class enemy extends cc.Component {
         
         for(let i = 0; i < hp_drop; i++){
             let item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(101));
+            item_drop.getComponent('dropitem').setItemDropDetails(this.game_node.getItemByID(101));
             result.push(item_drop);
         }
         for(let i = 0; i < mp_drop; i++){
             let item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(104));
+            item_drop.getComponent('dropitem').setItemDropDetails(this.game_node.getItemByID(104));
             result.push(item_drop);
         }
         return result;
@@ -319,7 +319,7 @@ export default class enemy extends cc.Component {
             //TODO
             let itemid = typecode.toString() + "0" + itemcode.toString();
             let item_drop : cc.Node = cc.instantiate(this.item_drop);
-            item_drop.getComponent('drops').setItemDropDetails(this.game_node.getItemByID(Number(itemid)));
+            item_drop.getComponent('dropitem').setItemDropDetails(this.game_node.getItemByID(Number(itemid)));
             result.push(item_drop);
         }
         return result;

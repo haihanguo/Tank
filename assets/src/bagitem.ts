@@ -5,27 +5,39 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import { Item, ItemType } from "./models/Item";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class bagitem extends cc.Component {
 
-    private released_color : cc.Color = cc.color(255, 255, 255, 255);
+    @property(cc.SpriteFrame)
+    released_back : cc.SpriteFrame
+    @property(cc.SpriteFrame)
+    pressed_back : cc.SpriteFrame
     private pressed_color : cc.Color = cc.color(168, 168, 168, 255);
 
-    onLoad () {
-        this.node.on(cc.Node.EventType.TOUCH_START, this.on_item_pressed, this);
-        //this.fire_button.on(cc.Node.EventType.TOUCH_MOVE, this.on_aim_moved, this);
-        //this.node.on(cc.Node.EventType.TOUCH_END, this.on_aim_canceled, this);
-        //this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.on_aim_canceled, this);
+    private item_type : ItemType = null;
+    private item : Item = null;
+
+    setItemDetails(pickedItem : cc.Node){
+        this.item = pickedItem.getComponent("dropitem").getItem();        
+    }
+
+    onLoad () {        
+         
     }
 
     start () {
 
     }
 
+    getItem(){
+        return this.item;
+    }
     on_item_pressed(): void{
-        this.node.color.set(this.pressed_color);
+        this.node.parent.parent.parent.parent.parent.getComponent("bagcontrol").itemClicked(this.node);
     }
     // update (dt) {}
 }

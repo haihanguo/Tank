@@ -10,7 +10,7 @@ import { ItemEquip, ItemConsumable, Item, ItemType } from "./models/Item";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class drops extends cc.Component {
+export default class dropitem extends cc.Component {
     
     time_to_ive = 25000
     
@@ -18,10 +18,12 @@ export default class drops extends cc.Component {
 
     @property({type:cc.AudioClip})
     pickup_sound : cc.AudioClip = null;
-
+    
     public drop_type : string = null;
     public drop_amount : number = null;
     public picked : boolean = false;
+
+    private item;
 
     onLoad(){
         this.node.zIndex = -2;
@@ -50,16 +52,20 @@ export default class drops extends cc.Component {
 
     setItemDropDetails(drop : Item){
         this.drop_type = "item";
-        this.setItemDropSprite(drop);
+        this.item = drop;
+        this.setItemDropSprite();
     }
 
-    setItemDropSprite(drop : Item){
+    setItemDropSprite(){
         let sprite_path : string = '';
         let self : cc.Node = this.node;        
-        sprite_path = drop.IconPath;        
+        sprite_path = this.item.IconPath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
             self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });
+    }
+    getItem(){
+        return this.item;
     }
     update (dt) {
         if (!cc.isValid(this.node)) return
