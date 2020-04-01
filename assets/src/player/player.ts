@@ -80,7 +80,7 @@ export default class player extends cc.Component {
                 this.gold_amount += item.drop_amount;
                 item.picked = true;
             }else if(item.drop_type ==="item"){
-                this.bag.getComponent("bagcontrol").addItem(other.node);                
+                this.bag.getComponent("bag_control").addItem(other.node, "dropitem");                
             }
             other.node.destroy();        
         }

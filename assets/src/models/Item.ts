@@ -9,7 +9,7 @@
 
         public Price : number;
         public IconPath : string;
-
+        public uuid : string;
         constructor(Id: number, Name: string, Description: string, Capacity: number, ItemType: number, Price: number, IconPath: string) {
             this.Id = Id;
             this.Name = Name;

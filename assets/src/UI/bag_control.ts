@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { ItemType, Item, ItemEquip, ItemConsumable, EquipType } from "./models/Item";
+import { ItemType, Item, ItemEquip, ItemConsumable, EquipType } from "../models/Item";
 
 const {ccclass, property} = cc._decorator;
 
@@ -14,8 +14,7 @@ export default class NewClass extends cc.Component {
 
     @property(cc.Prefab)
     bagitem : cc.Prefab = null;
-    @property(cc.Prefab)
-    equipped_item : cc.Prefab = null;
+
 
     @property(cc.Node)
     equipbag : cc.Node = null;
@@ -32,7 +31,7 @@ export default class NewClass extends cc.Component {
     item_desc_area :cc.Node = null;
 
     @property(cc.Node)
-    player_equip_area :cc.Node = null;
+    player_equip_panel :cc.Node = null;
 
 
     @property(cc.Node)
@@ -60,7 +59,6 @@ export default class NewClass extends cc.Component {
     }
 
     onLoad () {
-        this.node.active = false;
         this.equip_button = this.item_desc_area.getChildByName("equip_item_button");
         this.distory_button = this.item_desc_area.getChildByName("destory_item_button");
     }
@@ -70,39 +68,63 @@ export default class NewClass extends cc.Component {
     }
 
     openCloseBag(){
-        if(this.node.active){
-            this.selectedNode = null;
+        if(this.node.active === true){
+            this.node.setPosition(0,0);
+            if(this.player_equip_panel.active === true){
+                this.player_equip_panel.setPosition(0,0);
+            }
             this.node.active = false;
         }else{
+            //open bag --check status panel
             this.node.active = true;
-            this.equipbag.active = true;
-            this.consumebag.active = false;
-            this.updateItemButton(false);
+            if(this.player_equip_panel.active === true){
+                this.node.setPosition(-150,0);
+                this.player_equip_panel.setPosition(180,0);
+            }else{
+                this.node.setPosition(0,0);
+            }
             //console.log(this.item_desc_area.getChildByName("destory_item_button"));
         }
+        this.equipbag.active = true;
+        this.consumebag.active = false;
+
+        //reset bag
+        this.updateItemButton(false);
+        if(this.selectedNode != null){
+            this.selectedNode.parent.getComponent(cc.Sprite).spriteFrame = this.released_back;
+        }
+        this.selectedNode = null;
+        this.updateItemDesc();
     }
 
-    addItem(item_node : cc.Node){
-        let picked_item = cc.instantiate(this.bagitem);
-        picked_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = item_node.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame;
+    addItem(item_node : cc.Node, source : string){     
+        let picked_item : cc.Node = null; 
+        if(this.bag_item_pool.childrenCount === 0){
+            picked_item = cc.instantiate(this.bagitem);
+        }else{
+            picked_item = this.bag_item_pool.children[0];
+            picked_item.removeFromParent();
+        }
+        picked_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = item_node.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame;
         picked_item.getChildByName("item_sprite").setScale(2);
-        picked_item.getComponent("bagitem").setItemDetails(item_node);
+        picked_item.getComponent("bagitem").setItemDetails(item_node, source);
         if(picked_item.getComponent("bagitem").getItem().ItemType === ItemType.Equip){
             for (const iterator of this.equipbag.getChildByName("view").getChildByName("content").children) {
                 if(iterator.children.length === 0){
                     iterator.addChild(picked_item);
                     console.log(this.equipbag.getChildByName("view").getChildByName("content"))
-                    return;
+                    return true;
                 }
             }            
         }else if(picked_item.getComponent("bagitem").getItem().ItemType === ItemType.Consumable){
             for (const iterator of this.consumebag.getChildByName("view").getChildByName("content").children) {
                 if(iterator.children.length === 0){
                     iterator.addChild(picked_item);
-                    return;
+                    return true;;
                 }
             }     
         }
+        return false;
         
     }
 
@@ -163,51 +185,19 @@ export default class NewClass extends cc.Component {
         if(this.selectedNode === null){
             return;
         }
-        let detailed_item : ItemEquip = this.selectedNode.getComponent("bagitem").getItem();
-        let equip_area : string = "";
-        switch (detailed_item.EquipType) {
-            case EquipType.Helmet:
-                equip_area = "head";
-                break;
-            case EquipType.Armor:
-                equip_area = "chest";
-                break;
-            case EquipType.Belt:
-                equip_area = "waist";
-                break;
-            case EquipType.Shoes:
-                equip_area = "foot";
-                break;
-            case EquipType.Weapon:
-                equip_area = "weapon1";
-                break;
-            case EquipType.OffHandWeapon:
-                equip_area = "weapon2";
-                break;
-            case EquipType.Necklace:
-                    equip_area = "neck";
-                    break;
-            case EquipType.Ring:
-                equip_area = "ring";
-                break;
-            default:
-                return;
-        }
-        //check if node empty
-        //console.log(this.player_equip_area.getChildByName(equip_area));
-        if(this.player_equip_area.getChildByName(equip_area).childrenCount === 0){
-            let equipped_item = cc.instantiate(this.equipped_item);
-            equipped_item.getChildByName("item_sprite").getComponent(cc.Sprite).spriteFrame = this.selectedNode.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame;
-            equipped_item.getChildByName("item_sprite").setScale(0.8);
-            //equipped_item.getComponent("bagitem").setItemDetails(item_node);
-            this.player_equip_area.getChildByName(equip_area).addChild(equipped_item);
+        //call player panel add item
+        if(this.player_equip_panel.getComponent("equipment_control").equipItem(this.selectedNode)){
             this.selectedNode.parent.getComponent(cc.Sprite).spriteFrame = this.released_back;
-
             //remove node and add to pool
-            this.selectedNode.removeFromParent(false);
+            this.selectedNode.removeFromParent(true);
             this.bag_item_pool.addChild(this.selectedNode);
             this.selectedNode = null;
-        }        
+            this.updateItemButton(false);
+        }else{
+            return
+        }
+
+
     }
     // update (dt) {}
 }

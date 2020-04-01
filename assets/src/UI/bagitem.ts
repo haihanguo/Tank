@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { Item, ItemType } from "./models/Item";
+import { Item, ItemType } from "../models/Item";
 
 const {ccclass, property} = cc._decorator;
 
@@ -21,8 +21,8 @@ export default class bagitem extends cc.Component {
     private item_type : ItemType = null;
     private item : Item = null;
 
-    setItemDetails(pickedItem : cc.Node){
-        this.item = pickedItem.getComponent("dropitem").getItem();        
+    setItemDetails(item : cc.Node, source : string){
+        this.item =  item.getComponent(source).getItem();               
     }
 
     onLoad () {        
@@ -37,7 +37,7 @@ export default class bagitem extends cc.Component {
         return this.item;
     }
     on_item_pressed(): void{
-        this.node.parent.parent.parent.parent.parent.getComponent("bagcontrol").itemClicked(this.node);
+        this.node.parent.parent.parent.parent.parent.getComponent("bag_control").itemClicked(this.node);
     }
     // update (dt) {}
 }

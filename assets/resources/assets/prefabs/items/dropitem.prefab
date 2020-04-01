@@ -82,7 +82,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "drop_sprite",
+    "_name": "item_sprite",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1

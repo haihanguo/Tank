@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { ItemEquip, ItemConsumable, Item, ItemType } from "./models/Item";
+import { ItemEquip, ItemConsumable, Item, ItemType } from "../models/Item";
 
 const {ccclass, property} = cc._decorator;
 
@@ -46,11 +46,12 @@ export default class dropitem extends cc.Component {
         let self : cc.Node = this.node;        
         sprite_path = iconpath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
+            self.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });
     }
 
-    setItemDropDetails(drop : Item){
+    setItemDropDetails(drop : Item, uuid : string){
+        drop.uuid = uuid;
         this.drop_type = "item";
         this.item = drop;
         this.setItemDropSprite();
@@ -61,7 +62,7 @@ export default class dropitem extends cc.Component {
         let self : cc.Node = this.node;        
         sprite_path = this.item.IconPath;        
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            self.getChildByName('drop_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
+            self.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });
     }
     getItem(){
