@@ -23,7 +23,9 @@
     export class ItemEquip extends Item
     {
         public EquipType: EquipType;
-    
+        
+        public  Hp : number;
+        public  Mp : number;
         public  PhysicAttackMin : number;
         public  PhysicAttackMax : number;
         public  MagicAttackMin : number;   

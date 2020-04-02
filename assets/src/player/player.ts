@@ -9,14 +9,14 @@ import joystick from "../UI/joystick"
 import fire_control from "../UI/fire_control"
 import * as MathUtilities from './../MathUtilities'
 import { ItemType } from "../models/Item";
+import { PlayerModel } from "../models/PlayerModel";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class player extends cc.Component {
 
-    @property
-    speed: number = 0;
+
 
     @property
     health_point :number = 100;
@@ -52,6 +52,10 @@ export default class player extends cc.Component {
     @property(cc.Node)
     status_text: cc.Node = null;
 
+
+    //player status
+    private Player : PlayerModel = null;
+
     private offset: cc.Vec2 = cc.v2(0,0);
     private body: cc.RigidBody = null;
     private aim_lock: boolean = true;
@@ -64,6 +68,7 @@ export default class player extends cc.Component {
     onLoad () {
         this.node.zIndex = 0;
         this.body = this.getComponent(cc.RigidBody);
+        this.initialPlayerStatus()
         
     }
 
@@ -212,5 +217,16 @@ export default class player extends cc.Component {
         let dy : number = target.y - this.node.y;
         let distance : number = Math.sqrt((dx*dx)+(dy*dy));
         return distance;
-    } 
+    }
+
+    initialPlayerStatus(){
+        this.Player = new PlayerModel(this.node.uuid);
+    }
+    getPlayerStatus(){
+        return this.Player;
+    }
+
+    updatePlayerStatus(){
+        
+    }
 }

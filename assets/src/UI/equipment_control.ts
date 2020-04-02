@@ -6,11 +6,15 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { ItemEquip, EquipType } from "../models/Item";
+import { PlayerModel } from "../models/PlayerModel";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class equipment_control extends cc.Component {
+
+    @property(cc.Node)
+    player : cc.Node = null;
 
     @property(cc.Node)
     player_bag_panel :cc.Node = null;
@@ -32,7 +36,10 @@ export default class equipment_control extends cc.Component {
 
 
     private selectedNode : cc.Node = null;
+    private player_status : PlayerModel = null;
     private unequip_button;
+
+
     openCloseStatus(){
         if(this.node.active){
             this.node.setPosition(0,0);
@@ -106,6 +113,7 @@ export default class equipment_control extends cc.Component {
             this.unequipItem(null, equip_area);
         }        
         this.addEquipmentToPanel(item, equip_area);
+        this.updatePlayerStatus("equip", detailed_item)
         return true;
     }
 
@@ -154,6 +162,20 @@ export default class equipment_control extends cc.Component {
     }
     updateUnequipmentButton(status : boolean){
         this.unequip_button.getComponent(cc.Button).interactable= status;
+    }
+
+    updatePlayerStatus(action : string, item : ItemEquip){
+        this.player_status = this.player.getComponent("player").getPlayerStatus();
+        if(action === "equip"){
+            this.player_status.EquipmentItem.push(item);
+        }else if(action === "remove"){
+            let unequippeditem = this.player_status.EquipmentItem.filter(function (e){
+                return e.uuid == item.uuid;
+            });
+            if(unequippeditem != null){
+                this.player_status.EquipmentItem.splice(this.player_status.EquipmentItem.indexOf(item))
+            }            
+        }
     }
     onLoad () {
         this.unequip_button = this.node.getChildByName("unequip_button");

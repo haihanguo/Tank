@@ -13,9 +13,9 @@ const {ccclass, property} = cc._decorator;
 export default class bagitem extends cc.Component {
 
     @property(cc.SpriteFrame)
-    released_back : cc.SpriteFrame
+    released_back : cc.SpriteFrame = null;
     @property(cc.SpriteFrame)
-    pressed_back : cc.SpriteFrame
+    pressed_back : cc.SpriteFrame = null;
     private pressed_color : cc.Color = cc.color(168, 168, 168, 255);
 
     private item_type : ItemType = null;
