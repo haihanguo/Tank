@@ -156,17 +156,17 @@ export default class NewClass extends cc.Component {
         let detailed_attribute : string = "";
         if(item.ItemType === ItemType.Equip){
             let detailed_item : ItemEquip = this.selectedNode.getComponent("bagitem").getItem();
-            if(detailed_item.Level != undefined)
-                detailed_attribute += "等级 "+ detailed_item.Level;
-            if(detailed_item.PhysicAttackMin != undefined && detailed_item.PhysicAttackMax != undefined)
-                detailed_attribute += " 攻击 "+ detailed_item.PhysicAttackMin + " - " + detailed_item.PhysicAttackMax;
-            if(detailed_item.MagicAttackMin != undefined && detailed_item.MagicAttackMax != undefined)
-                detailed_attribute += " 魔力 "+ detailed_item.MagicAttackMin + " - " + detailed_item.MagicAttackMax;
-            if(detailed_item.DefenceMin != undefined && detailed_item.DefenceMax != undefined)
+            if(detailed_item.LevelRequire != 0)
+                detailed_attribute += "等级 "+ detailed_item.LevelRequire;
+            if(detailed_item.PhyAttackMin != 0 || detailed_item.PhyAttackMax != 0)
+                detailed_attribute += " 攻击 "+ detailed_item.PhyAttackMin + " - " + detailed_item.PhyAttackMax;
+            if(detailed_item.MagAttackMin != 0 || detailed_item.MagAttackMax != 0)
+                detailed_attribute += " 魔力 "+ detailed_item.MagAttackMin + " - " + detailed_item.MagAttackMax;
+            if(detailed_item.DefenceMin != 0 || detailed_item.DefenceMax != 0)
                 detailed_attribute += " 防御 "+ detailed_item.DefenceMin + " - " + detailed_item.DefenceMax;
-            if(detailed_item.Speed != undefined)
-                detailed_attribute += " 速度 "+ detailed_item.Speed;
-            if(detailed_item.Luck != undefined)
+            if(detailed_item.MoveSpeed != 0)
+                detailed_attribute += " 速度 "+ detailed_item.MoveSpeed;
+            if(detailed_item.Luck != 0)
                 detailed_attribute += " 幸运 "+ detailed_item.Luck;
         }else if(item.ItemType === ItemType.Consumable){
             let detailed_item : ItemConsumable = this.selectedNode.getComponent("bagitem").getItem(); 

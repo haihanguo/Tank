@@ -95,22 +95,25 @@ export default class game extends cc.Component {
                 let icon_path : string = json_item.icon;
 
                 let type : string = json_item.type;
-                let item : Item = null;
+               
                 if(type === ItemType.Equip.toString()){
-                    let equiptype : EquipType = json_item.equiptype;
-                    let phyatkmin : number = json_item.phyatkmin;
-                    let phyatkmax : number = json_item.phyatkmax;
-                    let magatkmin : number = json_item.magatkmin;
-                    let magatkmax : number = json_item.magatkmax;
-                    let defmin : number = json_item.defmin;
-                    let defmax : number = json_item.defmax;
-                    let speed : number = json_item.speed;
-                    let level : number = json_item.level;
-                    let luck : number = json_item.luck;
-
-                    item = new ItemEquip(id, name, desc, capacity, parseInt(type), price, icon_path, equiptype, phyatkmin,phyatkmax, magatkmin,magatkmax, defmin,defmax, speed,level, luck);
+                    let item : ItemEquip = null;
+                    item = new ItemEquip(id, name, desc, capacity, parseInt(type), price, icon_path);
+                    item.EquipType = json_item.equiptype === undefined ? null : json_item.equiptype;
+                    item.Hp = json_item.hp === undefined ? 0 : json_item.hp;
+                    item.Mp = json_item.mp === undefined ? 0 : json_item.mp;
+                    item.PhyAttackMin = json_item.phyatkmin === undefined ? 0 : json_item.phyatkmin;
+                    item.PhyAttackMax = json_item.phyatkmax === undefined ? 0 : json_item.phyatkmax;
+                    item.MagAttackMin = json_item.magatkmin === undefined ? 0 : json_item.magatkmin;
+                    item.MagAttackMax = json_item.magatkmax === undefined ? 0 : json_item.magatkmax;
+                    item.DefenceMin = json_item.defmin === undefined ? 0 : json_item.defmin;
+                    item.DefenceMax = json_item.defmax === undefined ? 0 : json_item.defmax;
+                    item.MoveSpeed = json_item.speed === undefined ? 0 : json_item.speed;
+                    item.LevelRequire = json_item.level === undefined ? 0 : json_item.level;
+                    item.Luck = json_item.luck === undefined ? 0 : json_item.luck;
                     this.item_list.push(item);
                 }else if(type === ItemType.Consumable.toString()){
+                    let item : ItemConsumable = null;
                     let hp :number = json_item.hp;
                     let mp :number = json_item.mp;
                     let rs : number = json_item.rs;

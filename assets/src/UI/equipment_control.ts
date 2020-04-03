@@ -23,6 +23,9 @@ export default class equipment_control extends cc.Component {
     player_equipment_area :cc.Node = null;
 
     @property(cc.Node)
+    player_attributes :cc.Node = null;
+
+    @property(cc.Node)
     equipment_item_pool :cc.Node = null;
 
     @property(cc.Prefab)
@@ -36,7 +39,7 @@ export default class equipment_control extends cc.Component {
 
 
     private selectedNode : cc.Node = null;
-    private player_status : PlayerModel = null;
+    private player_model : PlayerModel = null;
     private unequip_button;
 
 
@@ -66,6 +69,7 @@ export default class equipment_control extends cc.Component {
     }
 
     equipItem(item : cc.Node){
+        debugger
         if(item === null){
             return;
         }
@@ -163,24 +167,52 @@ export default class equipment_control extends cc.Component {
     updateUnequipmentButton(status : boolean){
         this.unequip_button.getComponent(cc.Button).interactable= status;
     }
-
     updatePlayerStatus(action : string, item : ItemEquip){
-        this.player_status = this.player.getComponent("player").getPlayerStatus();
+        this.player_model = this.player.getComponent("player").getPlayer();
         if(action === "equip"){
-            this.player_status.EquipmentItem.push(item);
+            this.player_model.EquipmentItem.push(item);
         }else if(action === "remove"){
-            let unequippeditem = this.player_status.EquipmentItem.filter(function (e){
+            let unequippeditem = this.player_model.EquipmentItem.filter(function (e){
                 return e.uuid == item.uuid;
             });
             if(unequippeditem != null){
-                this.player_status.EquipmentItem.splice(this.player_status.EquipmentItem.indexOf(item))
+                this.player_model.EquipmentItem.splice(this.player_model.EquipmentItem.indexOf(item))
             }            
         }
+        this.player.getComponent("player").updatePlayerStatus();
+        this.updatePlayerAttributePanel();
+    }
+    updatePlayerAttributePanel(){
+        let level = "等级 ： "+this.player_model.Level;       
+        let exp = "经验 ： "+this.player_model.Exp+"/"+this.player_model.ExpToNext;
+        let health = "生命： " + this.player_model.Hp+ "/" + this.player_model.InGameAttributes.MaxHp;
+        let mana = "魔法： " + this.player_model.Mp+ "/" + this.player_model.InGameAttributes.MaxMana;
+        let phy_attack = "攻击： " + this.player_model.InGameAttributes.PhyAttackMin+ " - " + this.player_model.InGameAttributes.PhyAttackMax;
+        let mag_attack = "魔力： " + this.player_model.InGameAttributes.MagAttackMin+ " - " + this.player_model.InGameAttributes.MagAttackMax;
+        let def = "防御： " + this.player_model.InGameAttributes.DefenceMin+ " - " + this.player_model.InGameAttributes.DefenceMax;
+        let accurate = "准确 ： "+this.player_model.InGameAttributes.Accurate;
+        let move_speed = "移动速度 ： "+this.player_model.InGameAttributes.MoveSpeed;
+        let attack_speed = "攻击速度 ： "+this.player_model.InGameAttributes.AttackSpeed;
+        let luck = "幸运 ： "+this.player_model.InGameAttributes.Luck;
+        let gold = "金币 ： "+this.player_model.Gold;
+
+        let layout = this.player_attributes.getChildByName("attributes_layout");
+        layout.getChildByName("level").getComponent(cc.Label).string = level;
+        layout.getChildByName("exp").getComponent(cc.Label).string = exp;
+        layout.getChildByName("health_point").getComponent(cc.Label).string = health;
+        layout.getChildByName("magic_point").getComponent(cc.Label).string = mana;
+        layout.getChildByName("attack").getComponent(cc.Label).string = phy_attack;
+        layout.getChildByName("magic").getComponent(cc.Label).string = mag_attack;
+        layout.getChildByName("defence").getComponent(cc.Label).string = def;
+        layout.getChildByName("accurate").getComponent(cc.Label).string = accurate;
+        layout.getChildByName("speed").getComponent(cc.Label).string = move_speed;
+        layout.getChildByName("attack_speed").getComponent(cc.Label).string = attack_speed;
+        layout.getChildByName("luck").getComponent(cc.Label).string = luck;
+        layout.getChildByName("gold").getComponent(cc.Label).string = gold;
     }
     onLoad () {
         this.unequip_button = this.node.getChildByName("unequip_button");
     }
-
     start () {
 
     }

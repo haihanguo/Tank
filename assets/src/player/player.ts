@@ -65,11 +65,11 @@ export default class player extends cc.Component {
     public gold_amount :number = 0;
     public exp_amount : number = 0;
 
+	public speed: number = 0;
     onLoad () {
         this.node.zIndex = 0;
         this.body = this.getComponent(cc.RigidBody);
-        this.initialPlayerStatus()
-        
+        this.initialPlayer();        
     }
 
     start () {
@@ -105,8 +105,8 @@ export default class player extends cc.Component {
             this.body.linearVelocity = cc.v2(0,0);
             return;
         }
-        let vx: number = this.speed * this.stick.dir.x;
-        let vy: number = this.speed * this.stick.dir.y;
+        let vx: number = this.Player.InGameAttributes.MoveSpeed * this.stick.dir.x;
+        let vy: number = this.Player.InGameAttributes.MoveSpeed * this.stick.dir.y;
         this.body.linearVelocity = cc.v2(vx, vy);
 
         
@@ -219,14 +219,17 @@ export default class player extends cc.Component {
         return distance;
     }
 
-    initialPlayerStatus(){
+    initialPlayer(){
         this.Player = new PlayerModel(this.node.uuid);
+        this.updatePlayerStatus();
     }
-    getPlayerStatus(){
+    getPlayer(){
         return this.Player;
     }
-
     updatePlayerStatus(){
-        
+        this.Player.BaseAttributes = PlayerModel.getBaseAttribute(this.Player.Level);
+        this.Player.EquipmentAttributes = PlayerModel.getEquipmentAttribute(this.Player.EquipmentItem);
+        this.Player.InGameAttributes = PlayerModel.getInGameAttribute(this.Player.BaseAttributes, this.Player.EquipmentAttributes);
+        console.log(this.Player);
     }
 }

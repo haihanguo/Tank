@@ -183,7 +183,7 @@
       "array": [
         0,
         0,
-        699.0178173233834,
+        688.4901960086288,
         0,
         0,
         0,
@@ -964,7 +964,6 @@
       "__id__": 13
     },
     "_enabled": true,
-    "speed": 200,
     "health_point": 100,
     "shield_point": 100,
     "camera": {
@@ -1201,7 +1200,7 @@
       "array": [
         0,
         0,
-        699.0178173233834,
+        688.4901960086288,
         0,
         0,
         0,
@@ -12498,7 +12497,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "player_status",
+    "_name": "player_attributes",
     "_objFlags": 0,
     "_parent": {
       "__id__": 226
@@ -12560,7 +12559,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "status_layout",
+    "_name": "attributes_layout",
     "_objFlags": 0,
     "_parent": {
       "__id__": 263
@@ -14227,11 +14226,17 @@
       "__id__": 215
     },
     "_enabled": true,
+    "player": {
+      "__id__": 13
+    },
     "player_bag_panel": {
       "__id__": 53
     },
     "player_equipment_area": {
       "__id__": 226
+    },
+    "player_attributes": {
+      "__id__": 263
     },
     "equipment_item_pool": {
       "__id__": 296

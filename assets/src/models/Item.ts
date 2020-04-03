@@ -24,32 +24,22 @@
     {
         public EquipType: EquipType;
         
-        public  Hp : number;
-        public  Mp : number;
-        public  PhysicAttackMin : number;
-        public  PhysicAttackMax : number;
-        public  MagicAttackMin : number;   
-        public  MagicAttackMax : number;  
-        public  DefenceMin : number; 
-        public  DefenceMax : number;
-        public  Speed : number;
-        public  Level : number;
-        public  Luck : number;
+        public  Hp : number = 0;
+        public  Mp : number = 0;
+        public  PhyAttackMin : number = 0;
+        public  PhyAttackMax : number = 0;
+        public  MagAttackMin : number = 0;   
+        public  MagAttackMax : number = 0;  
+        public  DefenceMin : number = 0; 
+        public  DefenceMax : number = 0;
+        public  Accurate: number = 0;
+        public  MoveSpeed: number = 0;
+        public  AttackSpeed : number = 0;
+        public  LevelRequire : number = 0;
+        public  Luck : number = 0;
 
-        constructor(Id: number, Name: string, Description: string, Capacity: number, ItemType: number, Price: number, IconPath: string, 
-            EquipType: EquipType, PhysicAttackMin : number, PhysicAttackMax : number, MagicAttackMin : number, MagicAttackMax : number, 
-            DefenceMin : number, DefenceMax : number, Speed : number,Level : number, Luck : number) { 
+        constructor(Id: number, Name: string, Description: string, Capacity: number, ItemType: number, Price: number, IconPath: string) { 
             super(Id, Name, Description, Capacity, ItemType, Price, IconPath);
-            this.EquipType = EquipType;
-            this.PhysicAttackMin = PhysicAttackMin;
-            this.PhysicAttackMax = PhysicAttackMax;
-            this.MagicAttackMin = MagicAttackMin;
-            this.MagicAttackMax = MagicAttackMax;
-            this.DefenceMin = DefenceMin;
-            this.DefenceMax = DefenceMax;
-            this.Speed = Speed;
-            this.Level = Level;
-            this.Luck =Luck;
         }
     }
 
