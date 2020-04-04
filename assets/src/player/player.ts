@@ -7,7 +7,7 @@
 
 import joystick from "../UI/joystick"
 import fire_control from "../UI/fire_control"
-import * as MathUtilities from './../MathUtilities'
+import MathHelpers, * as MathUtilities from './../MathUtilities'
 import { ItemType } from "../models/Item";
 import { PlayerModel } from "../models/PlayerModel";
 
@@ -33,7 +33,7 @@ export default class player extends cc.Component {
     aim_control: fire_control = null;    
 
     @property(cc.Node)
-    health_bar: cc.Node = null;
+    status_bar: cc.Node = null;
 
     @property(cc.Node)
     bag : cc.Node = null;
@@ -91,9 +91,9 @@ export default class player extends cc.Component {
         }
     }
     update (dt) {
-        this.movePlayer();     
+        this.movePlayer();
+        this.updatePlayerLiveStatus();
     }
-
     movePlayer(){        
         if(this.camera != null){
             this.camera.setPosition(this.node.x + this.offset.x, this.node.y + this.offset.y);
@@ -161,7 +161,7 @@ export default class player extends cc.Component {
         return this.auto_aim;
     }
     playerShoot(){
-        console.log(this.aimed_enemy);
+        //console.log(this.aimed_enemy);
         if(this.aimed_enemy != null){
             this.castSpell();
         }else{
@@ -174,7 +174,7 @@ export default class player extends cc.Component {
         new_spell.setPosition(this.node.getPosition());
         
         //set spell angel
-        let angle : number = this.lookAtObj(this.aimed_enemy.getPosition());
+        let angle : number = MathHelpers.lookAtObj(this.aimed_enemy.getPosition(), this.node.getPosition());
         console.log(angle* 180 / Math.PI);
         this.flipPlayer(angle * 180 / Math.PI);
 
@@ -196,7 +196,7 @@ export default class player extends cc.Component {
         let min_distance : number = 200;
         let closest_enemy : cc.Node = null;
         enemies.forEach(function(value){
-            let enemy_distance : number = this.distanceToObj(value.getPosition());
+            let enemy_distance : number = MathHelpers.distanceToObj(value.getPosition(), this.node);
             if(enemy_distance < min_distance){
                 min_distance = enemy_distance;
                 closest_enemy = value;
@@ -204,21 +204,6 @@ export default class player extends cc.Component {
         }, this);
         return closest_enemy;
     }
-    lookAtObj(target : cc.Vec2){        
-        let dx : number= target.x - this.node.x;
-        let dy : number = target.y - this.node.y;
-        //console.log(dx, dy);
-        let dir: cc.Vec2 = cc.v2(dx,dy);
-        let angle: number = dir.signAngle(cc.v2(1,0));
-        return angle;
-    }
-	distanceToObj(target : cc.Vec2){
-        let dx : number= target.x - this.node.x;
-        let dy : number = target.y - this.node.y;
-        let distance : number = Math.sqrt((dx*dx)+(dy*dy));
-        return distance;
-    }
-
     initialPlayer(){
         this.Player = new PlayerModel(this.node.uuid);
         this.updatePlayerStatus();
@@ -226,10 +211,18 @@ export default class player extends cc.Component {
     getPlayer(){
         return this.Player;
     }
+    gainExp(amount : number){
+        this.Player.Exp += amount;
+    }
     updatePlayerStatus(){
         this.Player.BaseAttributes = PlayerModel.getBaseAttribute(this.Player.Level);
         this.Player.EquipmentAttributes = PlayerModel.getEquipmentAttribute(this.Player.EquipmentItem);
         this.Player.InGameAttributes = PlayerModel.getInGameAttribute(this.Player.BaseAttributes, this.Player.EquipmentAttributes);
-        console.log(this.Player);
+    }
+    updatePlayerLiveStatus(){
+        this.status_bar.getChildByName('hp_bar').getComponent(cc.Sprite).fillStart =  this.Player.Hp / this.Player.InGameAttributes.MaxHp;
+        this.status_bar.getChildByName('mp_bar').getComponent(cc.Sprite).fillStart =  this.Player.Mp / this.Player.InGameAttributes.MaxMana;
+        this.status_bar.getChildByName('exp_bar').getComponent(cc.Sprite).fillStart = this.Player.Exp / this.Player.ExpToNext;
+        //this.health_bar.getComponent(cc.Sprite).fillRange = this.Player.Hp / this.Player.InGameAttributes.MaxHp;
     }
 }

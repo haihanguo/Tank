@@ -8,48 +8,33 @@
 import enemy from './enemy'
 import * as MathUtilities from './../MathUtilities'
 import MathHelpers from './../MathUtilities'
+import { Mob, MobModel } from '../models/Mob';
+import { Drop, Gold } from '../models/Drop';
 
 const {ccclass, property} = cc._decorator;
 @ccclass
 export default class slime extends enemy {
 
-    public distance_to_player : number = null;
-    public ready_attack : boolean = false;
+    private distance_to_player : number = null;
+    private ready_attack : boolean = false;
+
     onLoad () {
+        debugger
         this.node.zIndex = -1;
-        this.attachTouchEvent();
-        
+        this.attachTouchEvent();        
         this.game_node = this.node.parent.getComponent('game');
-        this.mobs_level = 1;
-        //setup mob properties
-        //this.node.parent.getComponent('game').getItem();
-        this.health_point = 100;
-        this.speed = 50;
-        
-        
+        this.mob_model = this.game_node.getMob(101);
+        this.in_game_mob = new MobModel(this.mob_model.Id, this.mob_model.Name, this.mob_model);
+
         this.ai_status = MathUtilities.AiStatus.idle;
         this.node.getComponent(cc.Animation).play("slime_idle");
-        this.alart_distance = 400;
-        this.attack_distance = 50;
-
-        //setup drops
-        this.drop_list = new Array();
-
-        this.drop_chance = this.game_node.getDrop('normaldrop');
-        this.drop_list.push(this.getGoldDrop(this.drop_chance));
-
-        let consum_droplist = this.getConsumDrop(this.drop_chance);
-        if(consum_droplist.length > 0){
-            this.drop_list = this.drop_list.concat(consum_droplist);
-        }
-        let equip_droplist = this.getEquipDrop(this.drop_chance);
-        if(equip_droplist.length > 0){
-            this.drop_list = this.drop_list.concat(equip_droplist);
-        }
-        console.log(this.drop_list);
-
-
         
+        this.drop_list = new Array();
+        //setup drops
+        this.drop_chance = this.game_node.getDrop('normaldrop');
+        this.in_game_mob.GoldDrop = Drop.getGoldDrop(this.in_game_mob.GoldDrop.Amount, this.drop_chance);
+        this.in_game_mob.ConsumeItemDropList = Drop.getConsumDrop(this.in_game_mob.ConsumeItemDropList, this.drop_chance);
+        this.in_game_mob.EquipItemDropList = Drop.getEquipDrop(this.in_game_mob.EquipItemDropList, this.drop_chance);
         //this.node.parent.getComponent('game').item_list;
     }
 
@@ -62,18 +47,18 @@ export default class slime extends enemy {
         this.distance_to_player = MathHelpers.distanceToObj(this.node.getParent().getChildByName('player').getPosition(), this.node.getPosition());
 
         //console.log(new Date().getTime() - this.time, this.ready_attack, this.distance_to_player)
-        if(new Date().getTime() - this.time > this.attack_gap * 1000){
+        if(new Date().getTime() - this.time > this.in_game_mob.AttackGap * 1000){
             this.ready_attack = true;
         }
 
         
-        if(this.distance_to_player >= this.alart_distance){
+        if(this.distance_to_player >= this.in_game_mob.AlertDistance){
             this.ai_status = MathUtilities.AiStatus.idle;
             this.enemyIdle();            
-        }else if(this.distance_to_player < (this.alart_distance-150) && this.distance_to_player > this.attack_distance && this.node.getComponent(cc.Animation).getAnimationState('slime_attack').isPlaying === false){
+        }else if(this.distance_to_player < (this.in_game_mob.AlertDistance-150) && this.distance_to_player > this.in_game_mob.AttackRange && this.node.getComponent(cc.Animation).getAnimationState('slime_attack').isPlaying === false){
             this.ai_status = MathUtilities.AiStatus.move;
             this.enemyMove();            
-        }else if(this.distance_to_player <= this.attack_distance && this.ready_attack){
+        }else if(this.distance_to_player <= this.in_game_mob.AttackRange && this.ready_attack){
             this.time = new Date().getTime();
             this.ready_attack = false;
             this.ai_status = MathUtilities.AiStatus.attack            

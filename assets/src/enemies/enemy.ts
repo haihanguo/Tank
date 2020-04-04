@@ -9,6 +9,8 @@ const {ccclass, property} = cc._decorator;
 import * as MathUtilities from './../MathUtilities'
 import MathHelpers from './../MathUtilities'
 import { Drop } from '../models/Drop';
+import { MobModel } from '../models/Mob';
+import { PlayerModel } from '../models/PlayerModel';
 
 //enum AiStatus {move, attack, idle};
 @ccclass
@@ -27,20 +29,14 @@ export default class enemy extends cc.Component {
     item_drop : cc.Prefab = null;
 
     private basepath : string = 'assets/images/items/';
+    public mob_model : MobModel = null;
+    public in_game_mob : MobModel = null;
+
     public aimed : boolean = false;
     public on_move : boolean = false;
     public ai_status : MathUtilities.AiStatus = null;
     public time : number = null;
     public face_to_target : string = "right";
-
-    public gold_drop_amount :  number = 0;
-
-    public health_point :number = 0;
-    public speed : number = 0;
-    public attack_gap : number = 0;
-    public alart_distance : number = 0;
-    public attack_distance : number = 0;
-    public mobs_level : number = 0;
 
     public game_node;
     public drop_chance : Drop;
@@ -48,30 +44,21 @@ export default class enemy extends cc.Component {
     
     onCollisionEnter(other, self) {
         if (other.node.name === "fireball") { 
-            this.health_point -= 20;
-            this.flyHealthPoint(20);
+            this.in_game_mob.Hp -= 5;
+            this.flyHealthPoint(5);
             other.node.destroy();
         }
+    }
+    attachTouchEvent(){
+        this.node.on(cc.Node.EventType.TOUCH_START, this.changeAimedStatus, this);
     }
     onLoad () {
         this.node.zIndex = -1;        
         console.log('add enemy');
         
     }
-    attachTouchEvent(){
-        this.node.on(cc.Node.EventType.TOUCH_START, this.changeAimedStatus, this);
-    }
     start () {
         
-    }
-    setupVerlocity(speed_scale? : number){
-        if(speed_scale == null){
-            speed_scale = 1;
-        }
-        var target_dir : number = this.lookAtObj(this.node.getParent().getChildByName('player').getPosition());
-        this.faceToTargetFaceDirection()
-        var body : cc.RigidBody = this.node.getComponent(cc.RigidBody)
-        body.linearVelocity = cc.v2(Math.cos(target_dir) * this.speed * speed_scale, Math.sin(-target_dir) *  this.speed * speed_scale);
     }
     faceToTargetFaceDirection(){
         if(this.face_to_target == "left"){
@@ -88,27 +75,30 @@ export default class enemy extends cc.Component {
         this.setupVerlocity();
         this.playAnimation();
     }
-    enemyAttack(){
-        this.physicAttackPlayer();
-    }
     enemyIdle(){
         this.setupVerlocity(0);
     }
-    physicAttackPlayer(){
+    enemyAttack(){
+        if(this.in_game_mob.AttackRange <= 10){
+            this.meleeAttackPlayer();
+        }        
+    }
+    setupVerlocity(speed_scale? : number){
+        if(speed_scale == null){
+            speed_scale = 1;
+        }
+        var target_dir : number = this.lookAtObj(this.node.getParent().getChildByName('player').getPosition());
+        this.faceToTargetFaceDirection()
+        var body : cc.RigidBody = this.node.getComponent(cc.RigidBody)
+        body.linearVelocity = cc.v2(Math.cos(target_dir) * this.in_game_mob.MoveSpeed * speed_scale, Math.sin(-target_dir) *  this.in_game_mob.MoveSpeed * speed_scale);
+    }
+    meleeAttackPlayer(){
         let player : cc.Node = this.node.getParent().getChildByName('player');
-        if(player.getComponent("player").shield_point > 50){
-            player.getComponent("player").shield_point -= 50;
-        }else{
-            var attact_point_left :number = 0;
-            attact_point_left = 50 - player.getComponent("player").shield_point;
-            player.getComponent("player").shield_point = 0;
-            player.getComponent("player").health_point -= attact_point_left;
-        }     
+        let attack_point = MathHelpers.getRandomInt(this.in_game_mob.AttackMax - this.in_game_mob.AttackMin) + this.in_game_mob.AttackMin;
+        player.getComponent("player").attacked(attack_point);  
+    }
+    getDropDetails(){
 
-        let attack_dir = player.getPosition().subtract(this.node.getPosition());
-        attack_dir = attack_dir.normalizeSelf();
-        player.getComponent(cc.RigidBody).applyLinearImpulse(cc.v2(attack_dir.x, attack_dir.y), player.convertToWorldSpaceAR(player.getPosition()), true);
-        
     }
     update(dt) {
 
@@ -151,25 +141,16 @@ export default class enemy extends cc.Component {
         }
     }
     checkHealthPoint(){
-        if (this.health_point <= 0){
+        if (this.in_game_mob.Hp <= 0){
             const dead_effect : cc.Node = cc.instantiate(this.dead_effect);
             dead_effect.setPosition(this.node.getPosition());
             this.node.parent.addChild(dead_effect);
-
-            //const item_drop : cc.Node = cc.instantiate(this.item_drop);
-            //item_drop.getComponent('drops').setDropDetails('gold', this.gold_drop_amount);
-            //item_drop.setPosition(this.node.getPosition());
-            //this.node.parent.addChild(item_drop);
-
-
             this.node.destroy()
         }else{
             return;
         } 
     }
-    getDropDetails(){
 
-    }
     addAimed(){        
         const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
         this.node.addChild(aim_icon);
@@ -207,13 +188,11 @@ export default class enemy extends cc.Component {
         }
         
     }
-
     getGoldDrop(chance : Drop) {
 
-        let base_gold = 10;
-        let gold_1 = (this.mobs_level + base_gold) * 10;
-        let gold_2 = (this.mobs_level + base_gold) * 20;
-        let gold_3 = (this.mobs_level + base_gold) * 40;
+        let gold_1 = (this.mob_model.GoldDrop.Amount) * 1;
+        let gold_2 = (this.mob_model.GoldDrop.Amount) * 2;
+        let gold_3 = (this.mob_model.GoldDrop.Amount) * 4;
 
         let total_weight :number = chance.GoldP1 + chance.GoldP2 + chance.GoldP3;
         let weight_result :number= MathHelpers.getRandomInt(total_weight);
@@ -242,7 +221,6 @@ export default class enemy extends cc.Component {
         item_drop.getComponent('dropitem').setGoldDropDetails(this.basepath+goldname, gold_drop+1);
         return item_drop;
     }
-
     getConsumDrop(chance : Drop) {
         
         let result = new Array();
@@ -281,7 +259,6 @@ export default class enemy extends cc.Component {
         }
         return result;
     }
-
     getEquipDrop(chance : Drop) {
         
         let result = new Array();
@@ -329,11 +306,28 @@ export default class enemy extends cc.Component {
         if(this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy === this.node){
             this.node.getParent().getChildByName('player').getComponent('player').aimed_enemy = null;
         }
-        this.node.getParent().getChildByName('player').getComponent('player').exp_amount += 10;
+        this.node.getParent().getChildByName('player').getComponent('player').gainExp(10);
         this.dropItem();
     }
 
     dropItem(){
+
+        let item_drop : cc.Node = cc.instantiate(this.item_drop);
+        item_drop.getComponent('dropitem').setGoldDropDetails(this.in_game_mob.GoldDrop.IconPath, this.in_game_mob.GoldDrop.Amount);
+        this.drop_list.push(item_drop);
+
+        this.in_game_mob.ConsumeItemDropList.forEach(element => {
+            item_drop = cc.instantiate(this.item_drop);
+            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid);
+            this.drop_list.push(item_drop);
+        });
+
+        this.in_game_mob.EquipItemDropList.forEach(element => {
+            item_drop = cc.instantiate(this.item_drop);
+            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid);
+            this.drop_list.push(item_drop);
+        });
+
         let item_count = 0;
         let position_x = this.node.getPosition().x;
         let position_y = this.node.getPosition().y

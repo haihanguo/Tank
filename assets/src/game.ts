@@ -7,7 +7,7 @@
 
 import * as MathUtilities from './MathUtilities'
 import {Item, ItemType, ItemEquip, ItemConsumable, EquipType} from './models/Item'
-import {Mob} from './models/Mob'
+import {Mob, MobModel} from './models/Mob'
 import {Drop} from './models/Drop'
 
 const {ccclass, property} = cc._decorator;
@@ -44,11 +44,13 @@ export default class game extends cc.Component {
     onLoad () {
         this.node.zIndex = -5;
         this.iniItemList();
+        console.log('item list loaded...');
         this.iniMobList();
+        console.log('mob list loaded...');
         this.iniDropList();
+        console.log('drop list loaded...');
         console.log(this.item_list, this.mob_list, this.drop_list);
     }
-
     start () {
         //this.create_enemy();
     }	
@@ -139,21 +141,33 @@ export default class game extends cc.Component {
     }
     iniMobList(){
         this.mob_list = new Array;
-            for(let json_item of this.mobs_Json_file.json){
-                let id : number = json_item.id;
-                let name: string = json_item.name;
-                let hp: number = json_item.hp;
-                let atkmin :number = json_item.atkmin;
-                let atkmax: number = json_item.atkmax;
-                let def : number = json_item.def;
-                let exp : number = json_item.exp;
-                let speed : number = json_item.speed;
-                let attackgap : number = json_item.attackgap;
-
-                let mob : Mob = null;
-                mob = new Mob(id, name, hp, atkmin, atkmax, def, exp, speed, attackgap);
-                this.mob_list.push(mob);
-            }
+        for(let json_item of this.mobs_Json_file.json){
+            let id : number = json_item.id;
+            let name: string = json_item.name;
+            let mob : MobModel = new MobModel(id, name);
+            mob.Hp = json_item.hp;
+            mob.AttackMin = json_item.atkmin;
+            mob.AttackMax = json_item.atkmax;
+            mob.PhyDef = json_item.phy_def;
+            mob.MagDef = json_item.mag_def;
+            mob.Exp = json_item.exp;
+            mob.AttackRange = json_item.attack_range;
+            mob.GoldDrop.Amount = json_item.gold_drop;
+            mob.Rare = json_item.rare;
+            mob.MoveSpeed = json_item.move_speed;
+            mob.AttackGap = json_item.attackgap;
+            let consume_list = json_item.consume_list;
+            consume_list.forEach(element => {
+                mob.ConsumeItemDropList.push(this.getItemByID(element));
+            });
+            let equip_list = json_item.equip_list;
+            equip_list.forEach(element => {
+                mob.EquipItemDropList.push(this.getItemByID(element));
+            });
+            console.log('mob1 loaded...');
+            console.log(mob);
+            this.mob_list.push(mob);
+        }
     }
     getMob(mob_id : number){
         for(let mob of this.mob_list){
