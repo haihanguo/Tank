@@ -8,7 +8,7 @@
 import enemy from './enemy'
 import * as MathUtilities from './../MathUtilities'
 import MathHelpers from './../MathUtilities'
-import { Mob, MobModel } from '../models/Mob';
+import { MobModel } from '../models/Mob';
 import { Drop, Gold } from '../models/Drop';
 
 const {ccclass, property} = cc._decorator;
@@ -19,7 +19,6 @@ export default class slime extends enemy {
     private ready_attack : boolean = false;
 
     onLoad () {
-        debugger
         this.node.zIndex = -1;
         this.attachTouchEvent();        
         this.game_node = this.node.parent.getComponent('game');

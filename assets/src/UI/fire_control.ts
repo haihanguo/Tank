@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import { Spell } from "../models/Spell";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -99,11 +101,13 @@ export default class fire_control extends cc.Component {
     }
     update (dt) {
         if(this.fire_button_pressed){
+
             this.player.getComponent('player').move_lock = true;
-            this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = this.pressed_time/0.5;
+            let spell : Spell = this.player.getComponent('player').getLoadedSpell();
+            this.node.getChildByName('fire_background_fill').getComponent(cc.Sprite).fillRange = this.pressed_time/(spell.CastingTime/1000);
             this.pressed_time +=dt;
             //console.log(this.pressed_time);
-            if(this.pressed_time >= 0.5){
+            if(this.pressed_time >= (spell.CastingTime/1000)){
                 this.player.getComponent('player').playerShoot();
                 this.pressed_time = 0;
             } 

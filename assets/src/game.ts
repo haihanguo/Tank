@@ -9,6 +9,7 @@ import * as MathUtilities from './MathUtilities'
 import {Item, ItemType, ItemEquip, ItemConsumable, EquipType} from './models/Item'
 import {Mob, MobModel} from './models/Mob'
 import {Drop} from './models/Drop'
+import { Spell } from './models/Spell';
 
 const {ccclass, property} = cc._decorator;
 
@@ -37,9 +38,13 @@ export default class game extends cc.Component {
     @property(cc.JsonAsset)
     drops_Json_file : cc.JsonAsset = null;
 
+    @property(cc.JsonAsset)
+    spells_Json_file : cc.JsonAsset = null;
+
     private item_list;
     private mob_list;
     private drop_list;
+    private spell_list;
     // LIFE-CYCLE CALLBACKS:
     onLoad () {
         this.node.zIndex = -5;
@@ -49,10 +54,12 @@ export default class game extends cc.Component {
         console.log('mob list loaded...');
         this.iniDropList();
         console.log('drop list loaded...');
-        console.log(this.item_list, this.mob_list, this.drop_list);
+        this.iniSpellList();
+        console.log('spell list loaded...');
+        console.log(this.item_list, this.mob_list, this.drop_list, this.spell_list);
     }
     start () {
-        //this.create_enemy();
+        this.create_enemy();
     }	
     create_enemy() {        
             const x :number = this.rand_in_range(this.enemy_spawn_min_x, this.enemy_spawn_max_x);
@@ -76,15 +83,13 @@ export default class game extends cc.Component {
         return Math.random() * (max - min) + min;
     }
     update(dt){
-        let enemies : cc.Node[] = this.node.children.filter(function (e){
-            return e.name == 'slime';
-        });
-        if(enemies.length < 1){
-            this.create_enemy();
+        //let enemies : cc.Node[] = this.node.children.filter(function (e){
+        //    return e.name == 'slime';
+        //});
+        //if(enemies.length < 1){
+        //    this.create_enemy();
             //this.create_enemy();
-        }
-        //this.player.getComponent('player').flipPlayer();
-        //this.player.getComponent('player').movePlayer();
+        //}
     }
     iniItemList(){
         this.item_list = new Array;
@@ -156,6 +161,7 @@ export default class game extends cc.Component {
             mob.Rare = json_item.rare;
             mob.MoveSpeed = json_item.move_speed;
             mob.AttackGap = json_item.attackgap;
+            mob.AlertDistance = json_item.alert_range;
             let consume_list = json_item.consume_list;
             consume_list.forEach(element => {
                 mob.ConsumeItemDropList.push(this.getItemByID(element));
@@ -164,8 +170,8 @@ export default class game extends cc.Component {
             equip_list.forEach(element => {
                 mob.EquipItemDropList.push(this.getItemByID(element));
             });
-            console.log('mob1 loaded...');
-            console.log(mob);
+            //console.log('mob1 loaded...');
+            //console.log(mob);
             this.mob_list.push(mob);
         }
     }
@@ -200,6 +206,29 @@ export default class game extends cc.Component {
         for(let drop of this.drop_list){
             if(drop.Name === name){
                 return drop;
+            }
+        }
+    }
+    iniSpellList(){
+        this.spell_list = new Array;
+            for(let json_item of this.spells_Json_file.json){
+                let spell : Spell = new Spell();
+                spell.Id = +json_item.id;
+                spell.Name = json_item.name;
+                spell.ScriptName = json_item.script_name;
+                spell.Description = json_item.description;
+                spell.Damage = json_item.damage;
+                spell.AttributeWeight = json_item.attri_weight;
+                spell.CastingTime = json_item.casting_time;
+                spell.ManaCost = json_item.mana_cost;
+                spell.Cooldown = json_item.cooldown;
+                this.spell_list.push(spell);
+            }
+    }
+    getSpell(spell_id : number){
+        for(let spell of this.spell_list){
+            if(spell.Id === spell_id){
+                return spell;
             }
         }
     }

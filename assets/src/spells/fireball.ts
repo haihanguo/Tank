@@ -20,9 +20,10 @@ export default class fireball extends spells {
     }
     start () {
         var fly_to_position = this.aimed_enemy.getPosition();
-        //console.log(fly_to_position, this.aimed_angel);        
-        this.node.runAction(cc.moveTo(0.3, fly_to_position, 0));
+        cc.tween(this.node)
+        .to(0.3, { position: fly_to_position})
+        .start();
     }
 
-    update (dt) {}
+    //update (dt) {}
 }

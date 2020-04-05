@@ -966,6 +966,9 @@
     "_enabled": true,
     "health_point": 100,
     "shield_point": 100,
+    "game": {
+      "__id__": 2
+    },
     "camera": {
       "__id__": 3
     },
@@ -15363,6 +15366,9 @@
     },
     "drops_Json_file": {
       "__uuid__": "75c7ca5b-b7b8-406c-9c29-3eb2a11a2ddb"
+    },
+    "spells_Json_file": {
+      "__uuid__": "38361c83-1da1-48e7-9be8-41f1d0d18fc3"
     },
     "_id": "b62T96am1O9Jj84RPZJ50J"
   }

@@ -44,8 +44,8 @@ export default class enemy extends cc.Component {
     
     onCollisionEnter(other, self) {
         if (other.node.name === "fireball") { 
-            this.in_game_mob.Hp -= 5;
-            this.flyHealthPoint(5);
+            this.in_game_mob.Hp -= 25;
+            this.flyHealthPoint(25);
             other.node.destroy();
         }
     }
@@ -150,7 +150,6 @@ export default class enemy extends cc.Component {
             return;
         } 
     }
-
     addAimed(){        
         const aim_icon : cc.Node = cc.instantiate(this.aim_effect);
         this.node.addChild(aim_icon);

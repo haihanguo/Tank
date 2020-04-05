@@ -1,0 +1,13 @@
+[
+	{
+        "id":"1",
+        "name": "火球术",
+        "script_name": "fireball",
+        "description" : "所有法师似乎都会的基础火系法术，稳定高效",
+        "damage" : 5,
+        "attri_weight" : 1,
+        "casting_time" : 1000,
+        "mana_cost" : 5,
+        "cooldown" : 0
+    }
+]

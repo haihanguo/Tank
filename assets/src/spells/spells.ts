@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import { Spell } from "../models/Spell";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -12,10 +14,9 @@ export default class spells extends cc.Component {
 
     time_to_ive = 2000
     
-    time_alive = 0
-
+    time_alive = 0    
     
-    
+    private spell_model : Spell = null;
 
     public spell_damage : number = 0;
     public spell_casting_time : number = 0;
@@ -27,7 +28,9 @@ export default class spells extends cc.Component {
     start () {
 
     }
-
+    getSpell(){
+        return this.spell_model;
+    }
     update(dt) {
         if (!cc.isValid(this.node)) return
         this.time_alive += dt * 1000

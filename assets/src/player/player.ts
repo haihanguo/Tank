@@ -10,6 +10,7 @@ import fire_control from "../UI/fire_control"
 import MathHelpers, * as MathUtilities from './../MathUtilities'
 import { ItemType } from "../models/Item";
 import { PlayerModel } from "../models/PlayerModel";
+import { Spell } from "../models/Spell";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,6 +23,9 @@ export default class player extends cc.Component {
     health_point :number = 100;
     @property
     shield_point : number = 100;
+
+    @property(cc.Node)
+    game: cc.Node = null;
 
     @property(cc.Node)
     camera: cc.Node = null;
@@ -65,11 +69,16 @@ export default class player extends cc.Component {
     public gold_amount :number = 0;
     public exp_amount : number = 0;
 
-	public speed: number = 0;
+    public speed: number = 0;
+    
+    private current_spell : Spell = null;
+
     onLoad () {
         this.node.zIndex = 0;
         this.body = this.getComponent(cc.RigidBody);
-        this.initialPlayer();        
+        this.initialPlayer();
+        this.current_spell = this.game.getComponent("game").getSpell(1);
+        console.log(this.current_spell);      
     }
 
     start () {
@@ -169,28 +178,29 @@ export default class player extends cc.Component {
         }
     }
     castSpell(){        
-        //console.log(this.node.getPosition());
-        const new_spell : cc.Node = cc.instantiate(this.normal_bullet);
-        new_spell.setPosition(this.node.getPosition());
-        
+        let new_spell : cc.Node = null;
+        cc.loader.loadRes("assets/prefabs/spells/fireball", function (err, prefab) {
+            new_spell = cc.instantiate(prefab);
+            console.log(new_spell);
+        });
+        new_spell.setPosition(this.node.getPosition());        
         //set spell angel
         let angle : number = MathHelpers.lookAtObj(this.aimed_enemy.getPosition(), this.node.getPosition());
-        console.log(angle* 180 / Math.PI);
+        //console.log(angle* 180 / Math.PI);
         this.flipPlayer(angle * 180 / Math.PI);
-
         new_spell.getComponent('fireball').aimed_enemy = this.aimed_enemy;
         if(this.getPlayerFaceDirection() === -1 ){
             new_spell.angle = 360 - angle * 180 / Math.PI; 
         }else{
             new_spell.angle = - angle * 180 / Math.PI; 
         }
-        this.node.getParent().addChild(new_spell);
+        this.game.addChild(new_spell);
     }
     spellTargetNotFound(){
         this.status_text.getComponent('status_text').setText(this.getPlayerFaceDirection(), 'I need a target...');
     }  
     getClosestEnemy(){
-        let enemies : cc.Node[] = this.node.parent.children.filter(function (e){
+        let enemies : cc.Node[] = this.game.children.filter(function (e){
             return e.name == 'slime';
         });
         let min_distance : number = 200;
@@ -210,6 +220,9 @@ export default class player extends cc.Component {
     }
     getPlayer(){
         return this.Player;
+    }
+    getLoadedSpell(){
+        return this.current_spell;
     }
     gainExp(amount : number){
         this.Player.Exp += amount;

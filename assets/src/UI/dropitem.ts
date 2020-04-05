@@ -60,7 +60,9 @@ export default class dropitem extends cc.Component {
     setItemDropSprite(){
         let sprite_path : string = '';
         let self : cc.Node = this.node;        
-        sprite_path = this.item.IconPath;        
+        sprite_path = this.item.IconPath;
+        console.log("dropitem initial...");
+        console.log(self);      
         cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
             self.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
         });

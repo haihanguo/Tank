@@ -9,9 +9,10 @@
         "mag_def": 0,
         "exp": 5,
         "attack_range": 10,
+        "alert_range": 800,
         "gold_drop": 20,
         "rare" : 0,
-        "move_speed": 100,
+        "move_speed": 30,
         "attackgap": 3000,
         "consume_list":[101, 104],
         "equip_list":[201, 301, 401, 601]
@@ -26,9 +27,10 @@
         "mag_def": 1,
         "exp": 15,
         "attack_range": 10,
+        "alert_range": 800,
         "gold_drop": 200,
         "rare" : 1,
-        "move_speed": 130,
+        "move_speed": 50,
         "attackgap": 3000,
         "consume_list":[101, 104, 102, 105],
         "equip_list":[201, 301, 401, 501, 601]  
