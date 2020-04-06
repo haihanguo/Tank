@@ -42,6 +42,9 @@ export default class slime extends enemy {
     }
 
     update(dt) {
+        //test
+        this.in_game_mob.Hp --;
+
         this.checkHealthPoint();
         this.distance_to_player = MathHelpers.distanceToObj(this.node.getParent().getChildByName('player').getPosition(), this.node.getPosition());
 

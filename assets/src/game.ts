@@ -55,8 +55,9 @@ export default class game extends cc.Component {
         this.iniDropList();
         console.log('drop list loaded...');
         this.iniSpellList();
-        console.log('spell list loaded...');
-        console.log(this.item_list, this.mob_list, this.drop_list, this.spell_list);
+        console.log('spell list loaded...');        
+        this.iniItemSprite();
+        console.log(this.node);
     }
     start () {
         this.create_enemy();
@@ -231,5 +232,59 @@ export default class game extends cc.Component {
                 return spell;
             }
         }
+    }
+    iniItemSprite(){
+        this.readItemsSprite(this.node, this.addItemSprite);
+    }
+    readItemsSprite(self, callback){
+        this.item_list.forEach(item_model => {
+            let sprite_path : string = '';      
+            sprite_path = item_model.IconPath;
+            cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
+                callback(self, item_model, spriteFrame);
+            });
+        });
+    }
+    addItemSprite(self: cc.Node, item_model, itemSprite : cc.SpriteFrame){        
+        let item :cc.Node = cc.instantiate(new cc.Node);
+        item.addComponent(cc.Sprite).spriteFrame = itemSprite;
+        self.getChildByName("prefab_pool").getChildByName("item_pool").addChild(item, 1, item_model.Name);
+    }
+    iniPrefabs(){        
+        //this.readItemsPrefabs(this.node, this.createItemPrefab, this.readPrefabsSprite, this.addPrefabSprite);
+        
+    }
+    readItemsPrefabs(self, callback, readPrefabsSpriteCallback, addPrefabSpriteCallback){
+        //get all items and create prefabs
+        let item_prefab_path = 'assets/prefabs/items/item';
+        this.item_list.forEach(item_model => {
+            cc.loader.loadRes(item_prefab_path, cc.Prefab, function (err, prefab) {
+                callback(self, item_model, prefab, readPrefabsSpriteCallback, addPrefabSpriteCallback);
+            });
+        });
+    }
+    createItemPrefab(self: cc.Node, item_model, prefab : cc.Prefab, readPrefabsSpriteCallback, addPrefabSpriteCallback){
+        let item :cc.Node = cc.instantiate(prefab);
+        readPrefabsSpriteCallback(self, item_model, item, addPrefabSpriteCallback);
+    }
+    readPrefabsSprite(self: cc.Node, item_model, item : cc.Node, callback){
+        let sprite_path : string = '';      
+        sprite_path = item_model.IconPath;
+        cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
+            callback(self, item_model, item, spriteFrame);
+        });
+    }
+    addPrefabSprite(self: cc.Node, item_model, item : cc.Node, itemSprite : cc.SpriteFrame){
+        item.getComponent(cc.Sprite).spriteFrame = itemSprite;
+        self.getChildByName("prefab_pool").getChildByName("item_pool").addChild(item);
+        console.log("adding"+item_model.Name);
+    }
+    getPrefab(prefab_id : number, prefab_type : string, prefab_script : string){        
+        return this.node.getChildByName("prefab_pool").getChildByName(prefab_type+"_pool").children.filter(function (e){
+            return e.getComponent(prefab_script).getId() === prefab_id
+        });
+    }
+    getItemSprite(item_name : string){        
+        return this.node.getChildByName("prefab_pool").getChildByName("item_pool").getChildByName(item_name).getComponent(cc.Sprite).spriteFrame;
     }
 }

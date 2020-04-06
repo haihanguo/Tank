@@ -317,13 +317,13 @@ export default class enemy extends cc.Component {
 
         this.in_game_mob.ConsumeItemDropList.forEach(element => {
             item_drop = cc.instantiate(this.item_drop);
-            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid);
+            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid, this.game_node.getComponent("game").getItemSprite(element.Name));
             this.drop_list.push(item_drop);
         });
 
         this.in_game_mob.EquipItemDropList.forEach(element => {
             item_drop = cc.instantiate(this.item_drop);
-            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid);
+            item_drop.getComponent('dropitem').setItemDropDetails(element, item_drop.uuid, this.game_node.getComponent("game").getItemSprite(element.Name));
             this.drop_list.push(item_drop);
         });
 

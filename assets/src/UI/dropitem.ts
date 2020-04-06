@@ -50,11 +50,12 @@ export default class dropitem extends cc.Component {
         });
     }
 
-    setItemDropDetails(drop : Item, uuid : string){
+    setItemDropDetails(drop : Item, uuid : string, sprite : cc.SpriteFrame){
         drop.uuid = uuid;
         this.drop_type = "item";
         this.item = drop;
-        this.setItemDropSprite();
+        this.node.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = sprite;
+        //this.setItemDropSprite();
     }
 
     setItemDropSprite(){
@@ -63,9 +64,10 @@ export default class dropitem extends cc.Component {
         sprite_path = this.item.IconPath;
         console.log("dropitem initial...");
         console.log(self);      
-        cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
-            self.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
-        });
+        //this.node.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame
+        //cc.loader.loadRes(sprite_path, cc.SpriteFrame, function (err, spriteFrame) {
+        //    self.getChildByName('item_sprite').getComponent(cc.Sprite).spriteFrame = spriteFrame;
+        //});
     }
     getItem(){
         return this.item;
