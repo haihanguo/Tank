@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { Spell } from "../models/Spell";
+import { PlayerModel } from "../models/Player";
 
 const {ccclass, property} = cc._decorator;
 
@@ -15,25 +16,21 @@ export default class spells extends cc.Component {
     time_to_ive = 2000
     
     time_alive = 0    
-    
-    private spell_model : Spell = null;
 
-    public spell_damage : number = 0;
-    public spell_casting_time : number = 0;
-    public spell_costs_mana : number = 0;
-    public spell_cooldown : number = 0;
-    
+    public spell_model : Spell = null;
+    public ingame_spell_model : Spell = null;
     public aimed_enemy : cc.Node = null;
     public aimed_angel : number = 0;
-    start () {
 
+    setSpell(spell_model : Spell){
+        this.spell_model =  {...spell_model};
     }
     getSpell(){
         return this.spell_model;
     }
-    update(dt) {
-        if (!cc.isValid(this.node)) return
-        this.time_alive += dt * 1000
-        if (this.time_alive >= this.time_to_ive) this.node.destroy()
-    }
+    //update(dt) {
+        //if (!cc.isValid(this.node)) return
+        //this.time_alive += dt * 1000
+        //if (this.time_alive >= this.time_to_ive) this.node.destroy()
+    //}
 }

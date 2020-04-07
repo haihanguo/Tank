@@ -28,6 +28,9 @@ export default class player extends cc.Component {
     game: cc.Node = null;
 
     @property(cc.Node)
+    spell_pool: cc.Node = null;
+
+    @property(cc.Node)
     camera: cc.Node = null;
 
     @property(joystick)
@@ -39,13 +42,11 @@ export default class player extends cc.Component {
     @property(cc.Node)
     status_bar: cc.Node = null;
 
+    @property(cc.Prefab)
+    flying_health_point = null;
+
     @property(cc.Node)
     bag : cc.Node = null;
-    @property(cc.Prefab)
-    bag_item : cc.Prefab = null;
-
-    @property(cc.Prefab)
-    normal_bullet: cc.Prefab = null
 
     @property
     degree: number = 0;    
@@ -77,7 +78,8 @@ export default class player extends cc.Component {
         this.node.zIndex = 0;
         this.body = this.getComponent(cc.RigidBody);
         this.initialPlayer();
-        this.current_spell = this.game.getComponent("game").getSpell(1);
+        this.current_spell = {...this.game.getComponent("game").getSpell(1)};
+        this.setInGameSpell();      
         console.log(this.current_spell);      
     }
 
@@ -172,33 +174,70 @@ export default class player extends cc.Component {
     playerShoot(){
         //console.log(this.aimed_enemy);
         if(this.aimed_enemy != null){
-            this.castSpell();
+            if(this.Player.Mp > this.current_spell.ManaCost){
+                this.castSpell();
+            }else{
+                this.setPlayerText("我没有足够的法力值...");
+            }         
         }else{
-            this.spellTargetNotFound();
+            this.setPlayerText("我需要一个目标...");
         }
     }
-    castSpell(){        
+    setInGameSpell(){
+        let current_mag = MathHelpers.getRandomIntWithLuck((this.Player.InGameAttributes.MagAttackMax - this.Player.InGameAttributes.MagAttackMin), this.Player.InGameAttributes.Luck)+this.Player.InGameAttributes.MagAttackMin;
+        this.current_spell.InGameDamage = this.current_spell.Damage + current_mag * this.current_spell.AttributeWeight;
+        //console.log(current_mag, this.current_spell.InGameDamage);
+    }
+    castSpell(){
         let new_spell : cc.Node = null;
-        cc.loader.loadRes("assets/prefabs/spells/fireball", function (err, prefab) {
-            new_spell = cc.instantiate(prefab);
-            console.log(new_spell);
+        this.spell_pool.children.forEach(element => {
+            if(element.getChildByName(this.current_spell.ScriptName)!= null){
+                new_spell = cc.instantiate(element);
+                return;
+            }            
         });
-        new_spell.setPosition(this.node.getPosition());        
+        if(new_spell === null){
+            //no spell found
+            return;
+        }
+        new_spell.active = true;
+        new_spell.setPosition(this.node.getPosition());
+        this.setInGameSpell();
+        new_spell.getComponent(this.current_spell.ScriptName).setSpell(this.current_spell);
         //set spell angel
         let angle : number = MathHelpers.lookAtObj(this.aimed_enemy.getPosition(), this.node.getPosition());
         //console.log(angle* 180 / Math.PI);
         this.flipPlayer(angle * 180 / Math.PI);
-        new_spell.getComponent('fireball').aimed_enemy = this.aimed_enemy;
+        new_spell.getComponent(this.current_spell.ScriptName).aimed_enemy = this.aimed_enemy;
         if(this.getPlayerFaceDirection() === -1 ){
             new_spell.angle = 360 - angle * 180 / Math.PI; 
         }else{
             new_spell.angle = - angle * 180 / Math.PI; 
         }
         this.game.addChild(new_spell);
+        new_spell.getComponent(this.current_spell.ScriptName).cast();
+        this.Player.Mp -= this.current_spell.ManaCost;
     }
-    spellTargetNotFound(){
-        this.status_text.getComponent('status_text').setText(this.getPlayerFaceDirection(), 'I need a target...');
-    }  
+    setPlayerText(text : string){
+        this.status_text.getComponent('status_text').setText(this.getPlayerFaceDirection(), text);
+    }
+    attacked(attackPoint : number){
+        attackPoint = attackPoint - MathHelpers.getRandomInt(this.Player.InGameAttributes.DefenceMax - this.Player.InGameAttributes.DefenceMin) + this.Player.InGameAttributes.DefenceMin;
+        if(attackPoint > 0){
+            this.Player.Hp -= attackPoint;
+            this.flyHealthPoint(attackPoint);
+        }else{
+            this.Player.Hp --;
+            this.flyHealthPoint(1);
+        }
+    }
+    flyHealthPoint(show_number : number){
+        let flying_health_point : cc.Node = cc.instantiate(this.flying_health_point);        
+        flying_health_point.getComponent(cc.Label).string = "-" + show_number;
+        flying_health_point.setPosition(this.node.getPosition());
+        this.node.parent.addChild(flying_health_point);        
+    }
+
     getClosestEnemy(){
         let enemies : cc.Node[] = this.game.children.filter(function (e){
             return e.name == 'slime';

@@ -82,7 +82,7 @@ export class Drop {
             amount_drop = MathHelpers.getRandomInt(amount_3);
         }
         //for test
-        amount_drop = 5;
+        amount_drop = 1;
 
         for(let i = 0; i < amount_drop; i++){
             result.push(droplist[MathHelpers.getRandomInt(droplist.length)]);
@@ -109,7 +109,7 @@ export class Drop {
         //random different consume type
         let amount_drop = MathHelpers.getRandomInt(max_drop);
         //for test
-        amount_drop = 5;
+        amount_drop = 1;
         for(let i = 0; i < amount_drop; i++){
             result.push(droplist[MathHelpers.getRandomInt(droplist.length)]);
         }

@@ -5,6 +5,7 @@ export class Spell {
     public Description: string;
     
     public Damage : number;
+    public InGameDamage : number;
     public AttributeWeight : number;
 
     public CastingTime : number;

@@ -7,7 +7,7 @@
 
 import * as MathUtilities from './MathUtilities'
 import {Item, ItemType, ItemEquip, ItemConsumable, EquipType} from './models/Item'
-import {Mob, MobModel} from './models/Mob'
+import {MobModel} from './models/Mob'
 import {Drop} from './models/Drop'
 import { Spell } from './models/Spell';
 
@@ -57,6 +57,8 @@ export default class game extends cc.Component {
         this.iniSpellList();
         console.log('spell list loaded...');        
         this.iniItemSprite();
+        
+        this.iniPrefabs();
         console.log(this.node);
     }
     start () {
@@ -84,13 +86,13 @@ export default class game extends cc.Component {
         return Math.random() * (max - min) + min;
     }
     update(dt){
-        //let enemies : cc.Node[] = this.node.children.filter(function (e){
-        //    return e.name == 'slime';
-        //});
-        //if(enemies.length < 1){
-        //    this.create_enemy();
+        let enemies : cc.Node[] = this.node.children.filter(function (e){
+            return e.name == 'slime';
+        });
+        if(enemies.length < 1){
+            this.create_enemy();
             //this.create_enemy();
-        //}
+        }
     }
     iniItemList(){
         this.item_list = new Array;
@@ -219,6 +221,7 @@ export default class game extends cc.Component {
                 spell.ScriptName = json_item.script_name;
                 spell.Description = json_item.description;
                 spell.Damage = json_item.damage;
+                spell.InGameDamage = spell.Damage;
                 spell.AttributeWeight = json_item.attri_weight;
                 spell.CastingTime = json_item.casting_time;
                 spell.ManaCost = json_item.mana_cost;
@@ -234,9 +237,9 @@ export default class game extends cc.Component {
         }
     }
     iniItemSprite(){
-        this.readItemsSprite(this.node, this.addItemSprite);
+        this.readItemsSprites(this.node, this.addItemSprites);
     }
-    readItemsSprite(self, callback){
+    readItemsSprites(self, callback){
         this.item_list.forEach(item_model => {
             let sprite_path : string = '';      
             sprite_path = item_model.IconPath;
@@ -245,14 +248,29 @@ export default class game extends cc.Component {
             });
         });
     }
-    addItemSprite(self: cc.Node, item_model, itemSprite : cc.SpriteFrame){        
+    addItemSprites(self: cc.Node, item_model, itemSprite : cc.SpriteFrame){        
         let item :cc.Node = cc.instantiate(new cc.Node);
         item.addComponent(cc.Sprite).spriteFrame = itemSprite;
         self.getChildByName("prefab_pool").getChildByName("item_pool").addChild(item, 1, item_model.Name);
     }
-    iniPrefabs(){        
+    iniPrefabs(){   
+        this.readSpellPrefabs(this.node, this.addSpellPrefabs);
         //this.readItemsPrefabs(this.node, this.createItemPrefab, this.readPrefabsSprite, this.addPrefabSprite);
         
+    }
+    readSpellPrefabs(self, callback){
+        this.spell_list.forEach(spell_model => {
+            let prefab_path : string = '';      
+            prefab_path = "assets/prefabs/spells/"+spell_model.ScriptName;
+            cc.loader.loadRes(prefab_path, cc.Prefab, function (err, prefab) {
+                callback(self, spell_model, prefab);
+            });
+        });
+    }
+    addSpellPrefabs(self: cc.Node, spell_model, spell_prefab : cc.Prefab){
+        let spell :cc.Node = cc.instantiate(spell_prefab);
+        spell.active = false;
+        self.getChildByName("prefab_pool").getChildByName("spell_pool").addChild(spell, 1);
     }
     readItemsPrefabs(self, callback, readPrefabsSpriteCallback, addPrefabSpriteCallback){
         //get all items and create prefabs

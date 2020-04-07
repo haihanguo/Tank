@@ -13,15 +13,83 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "fireball",
+    "_name": "spell",
     "_objFlags": 0,
     "_parent": null,
-    "_children": [],
+    "_children": [
+      {
+        "__id__": 2
+      }
+    ],
     "_active": true,
     "_components": [
       {
-        "__id__": 2
+        "__id__": 7
       },
+      {
+        "__id__": 8
+      }
+    ],
+    "_prefab": {
+      "__id__": 9
+    },
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "_eulerAngles": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_is3DNode": false,
+    "_groupIndex": 0,
+    "groupIndex": 0,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "fireball",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
       {
         "__id__": 3
       },
@@ -66,7 +134,7 @@
         1,
         2,
         2,
-        1
+        2
       ]
     },
     "_eulerAngles": {
@@ -87,7 +155,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1
+      "__id__": 2
     },
     "_enabled": true,
     "_materials": [
@@ -119,7 +187,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 1
+      "__id__": 2
     },
     "_enabled": true,
     "_defaultClip": {
@@ -130,8 +198,36 @@
         "__uuid__": "35e0daf5-90b5-4d9a-8bc6-79011b82c4d8"
       }
     ],
-    "playOnLoad": true,
+    "playOnLoad": false,
     "_id": ""
+  },
+  {
+    "__type__": "cc.CircleCollider",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": false,
+    "tag": 0,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 8,
+      "y": 0
+    },
+    "_radius": 4.7,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.PrefabInfo",
+    "root": {
+      "__id__": 1
+    },
+    "asset": {
+      "__uuid__": "8ef5964a-5755-4f20-877f-5b6ddb38a273"
+    },
+    "fileId": "69EtQ0XdZM65qaBOix/6f1",
+    "sync": false
   },
   {
     "__type__": "cc.CircleCollider",
@@ -144,10 +240,10 @@
     "tag": 0,
     "_offset": {
       "__type__": "cc.Vec2",
-      "x": 8,
-      "y": 0
+      "x": 16.1,
+      "y": 0.2
     },
-    "_radius": 4.7,
+    "_radius": 10.6,
     "_id": ""
   },
   {
@@ -158,8 +254,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "damage": 0,
-    "spell_speed": 300,
+    "spell_name": "fireball",
     "_id": ""
   },
   {
@@ -168,9 +263,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "8e659d08-a284-4b2b-b8da-f5b6b3277461"
+      "__uuid__": "8ef5964a-5755-4f20-877f-5b6ddb38a273"
     },
-    "fileId": "19zDl3+GFFeqBfMjOjXUSH",
+    "fileId": "a6IP2UzKpPhZeXVPD48WRq",
     "sync": false
   }
 ]

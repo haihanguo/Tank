@@ -11,6 +11,7 @@ import MathHelpers from './../MathUtilities'
 import { Drop } from '../models/Drop';
 import { MobModel } from '../models/Mob';
 import { PlayerModel } from '../models/PlayerModel';
+import { Spell } from '../models/Spell';
 
 //enum AiStatus {move, attack, idle};
 @ccclass
@@ -43,10 +44,13 @@ export default class enemy extends cc.Component {
     public drop_list;
     
     onCollisionEnter(other, self) {
-        if (other.node.name === "fireball") { 
-            this.in_game_mob.Hp -= 25;
-            this.flyHealthPoint(25);
+        if (other.node.name === "spell") { 
+            let spell_name = other.node.children[0].name;
+            let spell : Spell = other.node.getComponent(spell_name).getSpell();
+            this.in_game_mob.Hp -= spell.InGameDamage;
+            this.flyHealthPoint(spell.InGameDamage);
             other.node.destroy();
+            //this.node.
         }
     }
     attachTouchEvent(){
@@ -79,7 +83,8 @@ export default class enemy extends cc.Component {
         this.setupVerlocity(0);
     }
     enemyAttack(){
-        if(this.in_game_mob.AttackRange <= 10){
+        console.log(this.in_game_mob.AttackRange);
+        if(this.in_game_mob.AttackRange <= 50){
             this.meleeAttackPlayer();
         }        
     }
@@ -95,6 +100,7 @@ export default class enemy extends cc.Component {
     meleeAttackPlayer(){
         let player : cc.Node = this.node.getParent().getChildByName('player');
         let attack_point = MathHelpers.getRandomInt(this.in_game_mob.AttackMax - this.in_game_mob.AttackMin) + this.in_game_mob.AttackMin;
+        console.log(attack_point);
         player.getComponent("player").attacked(attack_point);  
     }
     getDropDetails(){
@@ -240,7 +246,7 @@ export default class enemy extends cc.Component {
             amount_drop = MathHelpers.getRandomInt(amount_3);
         }
         //for test
-        amount_drop = 5;
+        //amount_drop = 5;
         //random different consume type
         let hp_drop = MathHelpers.getRandomInt(amount_drop);
         let mp_drop = amount_drop - hp_drop;
@@ -282,7 +288,7 @@ export default class enemy extends cc.Component {
         let amount_drop = MathHelpers.getRandomInt(max_drop);
 
         //for test
-        amount_drop = 5;
+        //amount_drop = 5;
         for(let i = 0; i < amount_drop; i++){
             //item type code
             //2 weapon 3 armor 4 helmet 5 necklace 6 ring

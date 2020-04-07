@@ -8,29 +8,34 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class status_text extends cc.Component {
 
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
+    //onLoad () {
 
-    }
+    //}
 
-    start () {
+    //start () {
+//
+    //}
 
-    }
-
-    setText(direction : number, text : string){
-        if(direction < 0 && this.node.scaleX > 0){
-            this.node.scaleX *= -1;
-        }else if(direction > 0 && this.node.scaleX < 0){            
-            this.node.scaleX *= -1;
-        }
-        this.node.getComponent(cc.Label).string = text;
+    setText(direction : number, text : string){       
+        this.node.active = true; 
+        this.node.getComponent(cc.Label).string = text;        
         this.scheduleOnce(function(){ 
-            this.node.getComponent(cc.Label).string = ""; 
+            this.node.getComponent(cc.Label).string = "";
+            this.node.active = false;
         },2);
     }
-    // update (dt) {}
+    update (dt) {
+        if(this.node.active){
+            if(this.node.parent.scaleX < 0 && this.node.scaleX > 0){
+                this.node.scaleX *= -1;
+            }else if(this.node.parent.scaleX > 0 && this.node.scaleX < 0){            
+                this.node.scaleX *= -1;
+            }
+        }
+    }
 }

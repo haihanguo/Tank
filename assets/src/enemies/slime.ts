@@ -23,7 +23,7 @@ export default class slime extends enemy {
         this.attachTouchEvent();        
         this.game_node = this.node.parent.getComponent('game');
         this.mob_model = this.game_node.getMob(101);
-        this.in_game_mob = new MobModel(this.mob_model.Id, this.mob_model.Name, this.mob_model);
+        this.in_game_mob = {...this.mob_model};
 
         this.ai_status = MathUtilities.AiStatus.idle;
         this.node.getComponent(cc.Animation).play("slime_idle");
@@ -32,6 +32,7 @@ export default class slime extends enemy {
         //setup drops
         this.drop_chance = this.game_node.getDrop('normaldrop');
         this.in_game_mob.GoldDrop = Drop.getGoldDrop(this.in_game_mob.GoldDrop.Amount, this.drop_chance);
+        debugger
         this.in_game_mob.ConsumeItemDropList = Drop.getConsumDrop(this.in_game_mob.ConsumeItemDropList, this.drop_chance);
         this.in_game_mob.EquipItemDropList = Drop.getEquipDrop(this.in_game_mob.EquipItemDropList, this.drop_chance);
         //this.node.parent.getComponent('game').item_list;
@@ -40,16 +41,17 @@ export default class slime extends enemy {
     start () {
         this.time = new Date().getTime();
     }
+    something(){
 
+    }
     update(dt) {
         //test
-        this.in_game_mob.Hp --;
 
         this.checkHealthPoint();
         this.distance_to_player = MathHelpers.distanceToObj(this.node.getParent().getChildByName('player').getPosition(), this.node.getPosition());
-
+        //console.log(this.distance_to_player, this.in_game_mob.AttackRange, this.ready_attack);
         //console.log(new Date().getTime() - this.time, this.ready_attack, this.distance_to_player)
-        if(new Date().getTime() - this.time > this.in_game_mob.AttackGap * 1000){
+        if(new Date().getTime() - this.time > this.in_game_mob.AttackGap){
             this.ready_attack = true;
         }
 
@@ -61,6 +63,7 @@ export default class slime extends enemy {
             this.ai_status = MathUtilities.AiStatus.move;
             this.enemyMove();            
         }else if(this.distance_to_player <= this.in_game_mob.AttackRange && this.ready_attack){
+            
             this.time = new Date().getTime();
             this.ready_attack = false;
             this.ai_status = MathUtilities.AiStatus.attack            

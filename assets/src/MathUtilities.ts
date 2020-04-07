@@ -20,6 +20,16 @@ import { Drop } from "./models/Drop";
 		static getRandomInt(val: number) {
 			return Math.floor(Math.random() * Math.floor(val));
 		}
+		static getRandomIntWithLuck(val: number, luck: number) {
+			let total = 100;
+			
+			if(MathHelpers.getRandomInt(total) <= (luck*10)){
+				return val;
+			}
+			//console.log(val);
+			val++;
+			return Math.floor(Math.random() * Math.floor(val));
+		}
 		static lookAtObj(target : cc.Vec2, self : cc.Vec2){        
 			var dx : number= target.x - self.x;
 			var dy : number = target.y - self.y;

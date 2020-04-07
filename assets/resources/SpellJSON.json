@@ -7,7 +7,7 @@
         "damage" : 5,
         "attri_weight" : 1,
         "casting_time" : 1000,
-        "mana_cost" : 5,
+        "mana_cost" : 2,
         "cooldown" : 0
     }
 ]
